@@ -56,7 +56,7 @@ void test_task(void *p_arg)
 //		BuffPrintf(fatbuf);
 		//BuffPrintf("uart\n");
 		//USART_SendData(USART3,0xff);
-		USART_SendData(USART1,0xEE);
+//		USART_SendData(USART1,0xEE);
 //		TIM_SetCompare3(TIM4, 1800);
 //		USART_SendData(USART6, 0xff);
 //		led_on();
@@ -72,7 +72,7 @@ void test_task(void *p_arg)
 //		depth = get_ms5837_data();
 //		BuffPrintf("depth: %f\n", depth);
 		//USART_SendData(USART3,0xdd);
-		USART_SendData(USART1,0xaa);
+//		USART_SendData(USART1,0xaa);
 		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err);
 	//	TIM_SetCompare3(TIM4, 1500);
 //		USART_SendData(USART6, 0xee);
@@ -140,7 +140,7 @@ void start_task(void *p_arg)
 	command_analysis_slave_app_init(); // 树莓派通讯（或飞轮），优先级8
 	command_analysis_friend_app_init();   // 水下多机器人分布式通讯，消息接收，优先级13	
 	distributed_communicate_app_init(); // 水下多机器人分布式通讯，消息发布，优先级4						
-					 
+//					 
 	// 上位机部分，与上位机相关的程序
 	data_sendback_app_init(); // 回传数据，优先级12
 	data_show_app_init();     // 回传上位机曲线数据，优先级11
@@ -210,42 +210,46 @@ int main(void)
 	exfuns_init();
 	mf_mount("0:",1);
 	
-	// IMU初始化 
-#ifdef MPU_EXTERNAL	
-	// MPU9150初始化(1)——外接IMU
-	MPU_SetAddr(0x68);
-	mpu_set_address(0x68);
-	mpu_set_orientation(0x68);
+	// IMU初始化 ,IMU不再采用MPU6050，而是采用JY901
+	// JY901无需初始化，只需要等待一段时间，让其自动初始化完成	
+	JY901_init();
 	delay_ms(2000);
-	if(MPU_Init()!=0)
-	{
-		MyPrintf("MPU9150 Init Error\n");
-		return 0;
-	}
-	while(mpu_dmp_init())
-	{
-		MyPrintf("MPU9150 DMP Init Error\n");
-		delay_ms(200);
-	}
-#endif
+	
+//#ifdef MPU_EXTERNAL	
+//	// MPU9150初始化(1)——外接IMU
+//	MPU_SetAddr(0x68);
+//	mpu_set_address(0x68);
+//	mpu_set_orientation(0x68);
+//	delay_ms(2000);
+//	if(MPU_Init()!=0)
+//	{
+//		MyPrintf("MPU9150 Init Error\n");
+//		return 0;
+//	}
+//	while(mpu_dmp_init())
+//	{
+//		MyPrintf("MPU9150 DMP Init Error\n");
+//		delay_ms(200);
+//	}
+//#endif
 
-#ifdef MPU_ONBOARD		
-	// MPU9150初始化(2)——板载IMU
-	MPU_SetAddr(0x69);
-	mpu_set_address(0x69);
-	mpu_set_orientation(0x69);
-	delay_ms(2000);
-	if(MPU_Init()!=0)
-	{
-		MyPrintf("MPU9150 Init Error\n");
-		return 0;
-	}
-	while(mpu_dmp_init())
-	{
-		MyPrintf("MPU9150 DMP Init Error\n");
-		delay_ms(200);
-	}
-#endif
+//#ifdef MPU_ONBOARD		
+//	// MPU9150初始化(2)——板载IMU
+//	MPU_SetAddr(0x69);
+//	mpu_set_address(0x69);
+//	mpu_set_orientation(0x69);
+//	delay_ms(2000);
+//	if(MPU_Init()!=0)
+//	{
+//		MyPrintf("MPU9150 Init Error\n");
+//		return 0;
+//	}
+//	while(mpu_dmp_init())
+//	{
+//		MyPrintf("MPU9150 DMP Init Error\n");
+//		delay_ms(200);
+//	}
+//#endif
 
 	
 	// 以下是操作系统初始化

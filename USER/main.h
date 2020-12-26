@@ -23,9 +23,10 @@ History:
 #include "usart3.h"
 #include "usart2.h"
 #include "usart6.h"
-#include "mpu6050.h"
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h" 
+//#include "mpu6050.h"
+//#include "inv_mpu.h"
+//#include "inv_mpu_dmp_motion_driver.h" 
+#include "jy901.h"
 #include "ads1115.h"
 #include "ms5837.h"
 #include "sdio_sdcard.h"
@@ -61,7 +62,7 @@ History:
 #include "robotstate.h"
 
 // ∫Í±‰¡ø
-#define MPU_EXTERNAL
+//#define MPU_EXTERNAL
 //#define MPU_ONBOARD
 /********************************************************************************
 *

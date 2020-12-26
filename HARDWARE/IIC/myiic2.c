@@ -30,6 +30,11 @@ History:
 * 		@null
 * Return        ：null
 ********************************************************************************/
+void Delay(u32 count)//用于产生400KHzIIC信号所需要的延时
+{
+	while (count--);
+}
+
 void IIC2_Init(void)
 {			
   GPIO_InitTypeDef  GPIO_InitStructure;
@@ -62,8 +67,10 @@ void IIC2_Start(void)
 	IIC2_SDA=1;	  	  
 	IIC2_SCL=1;
 	delay_us(4);
+	//Delay(5);
  	IIC2_SDA=0;//START:when CLK is high,DATA change form high to low 
 	delay_us(4);
+	//Delay(5);
 	IIC2_SCL=0;//钳住I2C总线，准备发送或接收数据 
 }	  
 

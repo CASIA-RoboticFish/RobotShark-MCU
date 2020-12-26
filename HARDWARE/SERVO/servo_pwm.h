@@ -23,10 +23,10 @@ History:
 #define SERVO_MIN_VALUE 900
 
 // ¶æ»úÖÐÎ»
-#define SERVO1_MID_VALUE 1450
-#define SERVO2_MID_VALUE 1520
-#define SERVO3_MID_VALUE 1380
-#define SERVO4_MID_VALUE 1500
+#define SERVO1_MID_VALUE 1820
+#define SERVO2_MID_VALUE 1820
+#define SERVO3_MID_VALUE 1820
+#define SERVO4_MID_VALUE 1520
 
 
 static void pwm_tim4_init ( uint32_t arr, uint32_t psc );

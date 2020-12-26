@@ -129,8 +129,9 @@ void servo_init ( void )
 {
 	// 这样的设置可以让，pwm的频率为50Hz，因为时钟频率是84MHz。
 	// 因为84MHz/84/20000=50Hz。另外，pwm最大只能设到20000。但是对于舵机就是900~2100
+	// 因为84MHz/84/3030=330Hz。另外，pwm最大只能设到20000。但是对于舵机就是900~2100
 	// 一个周期是20ms，舵机一般高电平是0.9ms到2.1ms
-  pwm_tim4_init(20000, 84);
+	pwm_tim4_init(3030, 84);
 	servo_pwm_set_compare(SERVO1_MID_VALUE,SERVO1);
 	servo_pwm_set_compare(SERVO2_MID_VALUE,SERVO2);
 	servo_pwm_set_compare(SERVO3_MID_VALUE,SERVO3);

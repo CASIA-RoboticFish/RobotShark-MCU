@@ -14,6 +14,10 @@ static OS_TMR SensorsUpdateTmr;
 static OS_TCB SensorsUpdateTCB;
 __align(8) CPU_STK SENSORS_UPDATE_APP_TASK_STK[SENSORS_UPDATE_APP_STK_SIZE];
 
+short char_to_short(unsigned char cData[])
+{
+	return ((short)cData[1]<<8)|cData[0];
+}
 
 static void sensors_update_app_tmrcallback(void)
 {
@@ -40,15 +44,14 @@ static void sensors_update_app_task(void * p_arg)
 	unsigned long sensor_timestamp;
 	
 	// IMU数据
-	short gyro[3], accel[3], sensors;
-	unsigned char more;
-	long quat[4]; 
-	
-	// 
-	float t_pre, deltaT;
-	float ang1_pre , ang2_pre, ang3_pre;
-	float angw1, angw2, angw3;
-	
+	float gyro[3], accel[3];
+//	unsigned char more;
+//	long quat[4]; 	
+//	float t_pre, deltaT;
+//	float ang1_pre , ang2_pre, ang3_pre;
+//	float angw1, angw2, angw3;
+	unsigned char chrTemp[30];
+		
 	// 深度计数据（刚启动时的）
 	float depth_ori;
 	depth_ori = get_ms5837_data();
@@ -67,59 +70,36 @@ static void sensors_update_app_task(void * p_arg)
 		boxfishstate.timestamp = (float)now_os_tick/(float)(OS_CFG_TICK_RATE_HZ);
 		
 		// IMU(1)数据，外接IMU
-		MPU_SetAddr(0x68);
-		mpu_set_address(0x68);
-		dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more);
-		//mpu_get_gyronobias_reg(gyro,NULL); 
-//		boxfishstate.gimbal_imu_data.gyrox = (float)gyro[0]*0.001064; // 单位是：弧度每秒
-//		boxfishstate.gimbal_imu_data.gyroy = (float)gyro[1]*0.001064;
-//		boxfishstate.gimbal_imu_data.gyroz = (float)gyro[2]*0.001064;
-//		boxfishstate.gimbal_imu_data.accelx = (float)accel[0]*0.000061037; // 单位是：g
-//		boxfishstate.gimbal_imu_data.accely = (float)accel[1]*0.000061037;
-//		boxfishstate.gimbal_imu_data.accelz = (float)accel[2]*0.000061037;
-		while(mpu_dmp_get_data(&pitch,&roll,&yaw)!=0)
-		{
-			mpu_cnt++;
-			if(mpu_cnt>10) 
-			{
-				mpu_cnt = 0;
-				break;
-			}
-		}
+		JY901_read_bytes(0x50, JY901_AX, 24, &chrTemp[0]);
+		accel[0] = (float)char_to_short(&chrTemp[0])/32768*16;
+		accel[1] = (float)char_to_short(&chrTemp[2])/32768*16;
+		accel[2] = (float)char_to_short(&chrTemp[4])/32768*16;
+		gyro[0] = (float)char_to_short(&chrTemp[6])/32768*2000;
+		gyro[1] = (float)char_to_short(&chrTemp[8])/32768*2000;
+		gyro[2] = (float)char_to_short(&chrTemp[10])/32768*2000;
+//		h[0] = CharToShort(&chrTemp[12]);
+//		h[1] = CharToShort(&chrTemp[14]);
+//		h[2] = CharToShort(&chrTemp[16]);
+		roll = (float)char_to_short(&chrTemp[18])/32768*180;
+		pitch = (float)char_to_short(&chrTemp[20])/32768*180;
+		yaw = (float)char_to_short(&chrTemp[22])/32768*180;
+		
+		boxfishstate.gimbal_imu_data.gyrox = gyro[0]; // 单位是：
+		boxfishstate.gimbal_imu_data.gyroy = gyro[1];
+		boxfishstate.gimbal_imu_data.gyroz = gyro[2];
+		boxfishstate.gimbal_imu_data.accelx = accel[0]; // 单位是：g
+		boxfishstate.gimbal_imu_data.accely = accel[1];
+		boxfishstate.gimbal_imu_data.accelz = accel[2];
 		boxfishstate.gimbal_imu_data.pitch = pitch;
 		boxfishstate.gimbal_imu_data.roll = roll;
 		boxfishstate.gimbal_imu_data.yaw = yaw;
 		
-		
-//		// IMU(2)数据，板载IMU
-//		MPU_SetAddr(0x69);
-//		mpu_set_address(0x69);
-//		dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more);
-//		//mpu_get_gyronobias_reg(gyro,NULL); 
-//		boxfishstate.onboard_imu_data.gyrox = (float)gyro[0]*0.001064; // 单位是：弧度每秒
-//		boxfishstate.onboard_imu_data.gyroy = (float)gyro[1]*0.001064;
-//		boxfishstate.onboard_imu_data.gyroz = (float)gyro[2]*0.001064;
-//		boxfishstate.onboard_imu_data.accelx = (float)accel[0]*0.000061037; // 单位是：g
-//		boxfishstate.onboard_imu_data.accely = (float)accel[1]*0.000061037;
-//		boxfishstate.onboard_imu_data.accelz = (float)accel[2]*0.000061037;
-//		
-//		// 姿态角
-//		while(mpu_dmp_get_data(&pitch,&roll,&yaw)!=0)
-//		{
-//			mpu_cnt++;
-//			if(mpu_cnt>10) 
-//			{
-//				mpu_cnt = 0;
-//				break;
-//			}
-//		}
-//		boxfishstate.onboard_imu_data.pitch = pitch;
-//		boxfishstate.onboard_imu_data.roll = roll;
-//		boxfishstate.onboard_imu_data.yaw = yaw;
-		
+				
 		// 深度数据
 		if(depth_cnt < 10)
+		{
 			depth_cnt++;
+		}
 		else
 		{
 			boxfishstate.depth = get_ms5837_data()-depth_ori;
