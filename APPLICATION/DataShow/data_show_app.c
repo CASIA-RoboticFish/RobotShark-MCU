@@ -53,13 +53,13 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.roll),  4);
+						memcpy(databuf, &(boxfishstate.imu_data.roll),  4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.pitch),  4);
+						memcpy(databuf, &(boxfishstate.imu_data.pitch),  4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.yaw),  4);
+						memcpy(databuf, &(boxfishstate.imu_data.yaw),  4);
 						break;
 				}
 				break;
@@ -68,13 +68,13 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.accelx), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.accelx), 4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.accely), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.accely), 4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.accelz), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.accelz), 4);
 						break;
 				}
 				break;
@@ -83,69 +83,17 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.gyrox), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.gyrox), 4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.gyroy), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.gyroy), 4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.onboard_imu_data.gyroz), 4);
+						memcpy(databuf, &(boxfishstate.imu_data.gyroz), 4);
 						break;
 				}
 				break;
 			
-			case READ_IMU2_ATTITUDE:
-				switch(s_dataaxis)
-				{
-					case 1:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.roll),  4);
-						break;
-					case 2:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.pitch),  4);
-						break;
-					case 3:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.yaw),  4);
-						break;
-				}
-				break;
-			
-			case READ_IMU2_ACCEL:
-				switch(s_dataaxis)
-				{
-					case 1:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.accelx), 4);
-						break;
-					case 2:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.accely), 4);
-						break;
-					case 3:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.accelz), 4);
-						break;
-				}
-				break;
-			
-			case READ_IMU2_GYRO:
-				switch(s_dataaxis)
-				{
-					case 1:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.gyrox), 4);
-						break;
-					case 2:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.gyroy), 4);
-						break;
-					case 3:
-						memcpy(databuf, &(boxfishstate.gimbal_imu_data.gyroz), 4);
-						break;
-				}
-				break;
-			
-			case READ_GIMBAL1_ANGLE:
-				memcpy(databuf, &(boxfishstate.gimbal1_angle), 2);
-				break;
-			
-			case READ_GIMBAL2_ANGLE:
-				memcpy(databuf, &(boxfishstate.gimbal2_angle), 2);
-				break;
 			
 			case READ_DEPTH:
 				memcpy(databuf, &(boxfishstate.depth), 4);

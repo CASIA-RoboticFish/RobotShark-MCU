@@ -21,27 +21,28 @@ typedef enum SwimState
 	SWIM_FORCESTOP,
 	SWIM_STOP,
 	SWIM_RUN,
+	TAIL_STOP,
+	TAIL_RUN,
+	LEFT_PECTFIN_STOP,
+	LEFT_PECTFIN_RUN,
+	RIGHT_PECTFIN_STOP,
+	RIGHT_PECTFIN_RUN,
 	SWIM_INIT
 }SwimState;
 
 
 typedef struct SwimParam // V2版对其进行了修改
 {
-	float motion_time;
+	float motion_time; // 尾巴的
 	float motion_amp;
 	float motion_freq;
 	float motion_offset;
 	float tail_angle;
-	float pecfin_angle[2];
+	float pecfin_angle[2]; // 胸鳍的
+	float pecfin_amp[2];
+	float pecfin_freq[2];
+	float pecfin_offset[2];
 }SwimParam;
-
-
-typedef enum GimbalState
-{
-	GIMBAL_STOP,
-	GIMBAL_ZERO,
-	GIMBAL_RUN
-}GimbalState;
 
 
 typedef struct IMUData
@@ -64,11 +65,7 @@ typedef struct BOXFISH
 	unsigned int communicate_basetime_tick; // 通讯基准时刻
 	SwimState swim_state;
 	SwimParam swim_param;	
-	GimbalState gimbal_state;
-	IMUData onboard_imu_data;
-	IMUData gimbal_imu_data;	
-	uint16_t gimbal1_angle;
-	uint16_t gimbal2_angle;
+	IMUData imu_data;	
 	float depth;
 }BOXFISH;
 

@@ -16,12 +16,8 @@ BOXFISH boxfishstate =
 	0.0f,          // timestamp
 	0, // 通讯基准时刻
 	SWIM_INIT,     // swim_state
-	{0.0f, 20.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f}, // swim_param
-	GIMBAL_STOP,   // gimbal_state
-	{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, // onboard_imu_data
-	{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, // gimbal_imu_data
-	0, // gimbal1_angle
-	0, // gimbal2_angle
+	{0.0f, 20.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, // swim_param
+	{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, // imu_data
 	0.0f // depth
 };
 

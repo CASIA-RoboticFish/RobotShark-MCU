@@ -84,15 +84,15 @@ static void sensors_update_app_task(void * p_arg)
 		pitch = (float)char_to_short(&chrTemp[20])/32768*180;
 		yaw = (float)char_to_short(&chrTemp[22])/32768*180;
 		
-		boxfishstate.gimbal_imu_data.gyrox = gyro[0]; // 单位是：
-		boxfishstate.gimbal_imu_data.gyroy = gyro[1];
-		boxfishstate.gimbal_imu_data.gyroz = gyro[2];
-		boxfishstate.gimbal_imu_data.accelx = accel[0]; // 单位是：g
-		boxfishstate.gimbal_imu_data.accely = accel[1];
-		boxfishstate.gimbal_imu_data.accelz = accel[2];
-		boxfishstate.gimbal_imu_data.pitch = pitch;
-		boxfishstate.gimbal_imu_data.roll = roll;
-		boxfishstate.gimbal_imu_data.yaw = yaw;
+		boxfishstate.imu_data.gyrox  = gyro[0]; // 单位是：
+		boxfishstate.imu_data.gyroy  = gyro[1];
+		boxfishstate.imu_data.gyroz  = gyro[2];
+		boxfishstate.imu_data.accelx = accel[0]; // 单位是：g
+		boxfishstate.imu_data.accely = accel[1];
+		boxfishstate.imu_data.accelz = accel[2];
+		boxfishstate.imu_data.pitch  = pitch;
+		boxfishstate.imu_data.roll   = roll;
+		boxfishstate.imu_data.yaw    = yaw;
 		
 				
 		// 深度数据

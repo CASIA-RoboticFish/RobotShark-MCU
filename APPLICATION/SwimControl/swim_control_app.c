@@ -36,33 +36,19 @@ float compute_tail_cpg_model(float freq, float amp, float offset, float dt)
 // …Ë÷√Œ≤∞Õ∞⁄∂Ø∑˘∂»
 void set_tail_amp(float amp)
 {
-//	if(boxfishstate.swim_state != SWIM_RUN)
-//	{
-//			return;
-//	}
 	boxfishstate.swim_param.motion_amp = amp;
 }
 
 // …Ë÷√Œ≤∞Õ∞⁄∂Ø∆µ¬ 
 void set_tail_freq(float freq)
 {
-//	if(boxfishstate.swim_state != SWIM_RUN)
-//	{
-//			return;
-//	}
 	boxfishstate.swim_param.motion_freq = freq;
-
 }
 
 // …Ë÷√Œ≤∞Õ∞⁄∂Ø∆´“∆
 void set_tail_offset(float offset)
 {
-//	if(boxfishstate.swim_state != SWIM_RUN)
-//	{
-//			return;
-//	}
 	boxfishstate.swim_param.motion_offset = offset;
-
 }
 
 
@@ -114,6 +100,49 @@ void swim_control_start(void)
 
 	boxfishstate.swim_state = SWIM_RUN;
 }
+
+void swim_control_tail_start(void)
+{
+	CPU_SR_ALLOC();
+	OS_ERR err;
+
+	if(boxfishstate.swim_state == TAIL_RUN)
+	{
+		return;
+	}
+	else if(boxfishstate.swim_state == TAIL_STOP)
+	{
+		set_tail_amp(s_f32_stop_amp);
+		set_tail_freq(s_f32_stop_freq);
+		s_f32_cpg_k1 = 50;
+	  s_f32_cpg_k2 = 50;
+	}
+	else if(boxfishstate.swim_state == SWIM_FORCESTOP)
+	{
+		set_tail_amp(s_f32_stop_amp);
+		set_tail_freq(s_f32_stop_freq);
+		s_f32_cpg_k1 = 50;
+	  s_f32_cpg_k2 = 50;
+		s_f32_motion_time = 0.0f;
+		s_f32_cpg_state_x = 0.0001f;
+		s_f32_cpg_state_y = 0.0001f;
+		OS_CRITICAL_ENTER();
+		OSTaskResume(&SwimControlTCB,
+								 &err);
+		OSTmrStart(&SwimControlTmr,
+							 &err);
+		OS_CRITICAL_EXIT();
+	}
+	else if(boxfishstate.swim_state == SWIM_INIT)
+	{
+		// Do nothing!
+	}
+
+	boxfishstate.swim_state = SWIM_RUN;
+}
+//void swim_control_leftpectfin_start(void);
+//void swim_control_rightpectfin_start(void);
+
 
 
 void swim_control_stop(void)

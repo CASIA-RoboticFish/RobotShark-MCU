@@ -216,31 +216,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_RIGHTPECFIN_DOWN\n");
 			#endif
-			break;
-		
-		case SET_GIMBAL_RUN:
-			boxfishstate.gimbal_state = GIMBAL_RUN;
-			pantilt_control_resume();
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("SET_GIMBAL_RUN\n");
-			#endif
-			break;
-		
-		case SET_GIMBAL_STOP:
-			boxfishstate.gimbal_state = GIMBAL_STOP;
-			pantilt_control_stop();
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("SET_GIMBAL_STOP\n");
-			#endif
-			break;
-		
-		case SET_GIMBAL_ZERO:
-			boxfishstate.gimbal_state = GIMBAL_ZERO;
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("SET_GIMBAL_ZERO\n");
-			#endif
-			break;
-		
+			break;		
 		
 		case SET_DATASHOW_OVER:
 			data_show_app_stop();
@@ -272,8 +248,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case READ_ROBOT_STATUS:
 			uint8_t rmstatus = 0x00;
-			rmstatus = (uint8_t)(((boxfishstate.swim_state & 0x03)<<6) + \
-						((boxfishstate.gimbal_state & 0x03)<<4));
+			rmstatus = (uint8_t)((boxfishstate.swim_state & 0x03)<<6);
 			memcpy(databuf, &rmstatus, 1);
 			RFLink_sendStruct(FRIEND_ID1, command, databuf, 1);
 		  
@@ -322,59 +297,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 				BuffPrintf("READ_IMU1_GYRO\n");
 			#endif
 			break;
-		
-		case READ_IMU2_ATTITUDE:
-			data = atof(message);
-			set_data_type(command,data);
-			data_show_app_resume();
-		
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("READ_IMU2_ATTITUDE\n");
-			#endif
-			break;
-		
-		case READ_IMU2_ACCEL:
-			data = atof(message);
-			set_data_type(command,data);
-			data_show_app_resume();
-		
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("READ_IMU2_ACCEL\n");
-			#endif
-			break;
-		
-		case READ_IMU2_GYRO:
-			data = atof(message);
-			set_data_type(command,data);
-			data_show_app_resume();
-		
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("READ_IMU2_GYRO\n");
-			#endif
-			break;
-		
-		
-		case READ_GIMBAL1_ANGLE:
-			data = atof(message);
-			set_data_type(command,data);
-			data_show_app_resume();
-		
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("READ_GIMBAL1_ANGLE\n");
-			#endif
-			break;
-		
-		case READ_GIMBAL2_ANGLE:
-			data = atof(message);
-			set_data_type(command,data);
-			data_show_app_resume();
-		
-			#ifdef PRINT_COMMAND_EN
-				BuffPrintf("READ_GIMBAL2_ANGLE\n");
-			#endif
-			break;
-		
-		
+				
 		case READ_DEPTH:
 			data = atof(message);
 			set_data_type(command,data);

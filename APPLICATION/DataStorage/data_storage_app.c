@@ -72,11 +72,11 @@ static void data_storage_app_task(void * p_arg)
 				// 系统时间
 				memcpy(databuf, &(boxfishstate.timestamp), 4);
 				// pitch
-				memcpy(databuf+4, &(boxfishstate.gimbal_imu_data.roll), 4);
+				memcpy(databuf+4, &(boxfishstate.imu_data.roll), 4);
 				// roll
-				memcpy(databuf+8, &(boxfishstate.gimbal_imu_data.pitch), 4);
+				memcpy(databuf+8, &(boxfishstate.imu_data.pitch), 4);
 				// yaw
-				memcpy(databuf+12, &(boxfishstate.gimbal_imu_data.yaw), 4);
+				memcpy(databuf+12, &(boxfishstate.imu_data.yaw), 4);
 				// 结束
 				//*(databuf+20) = 0xff;
 				
