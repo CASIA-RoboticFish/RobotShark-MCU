@@ -20,7 +20,7 @@ C6 	温度系数的温度 TEMPSENS
 */
 uint16_t  Cal_C[7];	     // 用于存放PROM中的6组数据1-6
 int32_t dT,MS5837_TEMP;  // 全局变量
-
+float global_depth;
 
 // 别人写的
 unsigned long MS583703BA_getConversion(uint8_t command)
@@ -61,15 +61,15 @@ unsigned long MS583703BA_getConversion(uint8_t command)
 void MS583703BA_getTemperature(void)
 {
 	uint32_t D2_Temp;
-	D2_Temp = MS583703BA_getConversion(0x58);
+	D2_Temp = MS583703BA_getConversion(0x48);
 	dT=D2_Temp - (((int32_t)Cal_C[5])*256);
 	MS5837_TEMP=2000+(int64_t)dT*((int64_t)Cal_C[6])/8388608;
 }
 
 // 别人写的
-int32_t MS583703BA_getPressure(void)
+double MS583703BA_getPressure(void)
 {
-	int32_t Pressure;
+	double Pressure;
 	
 	uint32_t D1_Pres;
 
@@ -82,22 +82,24 @@ int32_t MS583703BA_getPressure(void)
 	
 	OFF_=(int64_t)Cal_C[2]*65536+((int64_t)Cal_C[4]*(int64_t)dT)/128;
 	SENS=(int64_t)Cal_C[1]*32768+((int64_t)Cal_C[3]*(int64_t)dT)/256;
-
+	
+	MS5837_TEMP = 2000;
 	if(MS5837_TEMP<2000)  // low temp
 	{
 		T2 = 3*((int64_t)dT*(int64_t)dT) / 8589934592; 
+		//T2 = 3*((int64_t)dT*(int64_t)dT) / 0x80000000
 		OFF2 = 3 * (MS5837_TEMP - 2000) * (MS5837_TEMP - 2000)/2; 
 		SENS2 = 5 * (MS5837_TEMP - 2000) * (MS5837_TEMP - 2000)/8; 	
 	}
 	else
 	{
-	  T2=2*((int64_t)dT*(int64_t)dT)/137438953472;
+		T2=2*((int64_t)dT*(int64_t)dT)/137438953472;
 		OFF2 = (MS5837_TEMP - 2000) * (MS5837_TEMP - 2000)/16; 
 		SENS2 = 0;
 	 }
 	OFF_ = OFF_ - OFF2;
 	SENS = SENS - SENS2;	
-  Pressure= ((D1_Pres*SENS/2097152-OFF_)/8192);
+	Pressure=(double)((D1_Pres*SENS/2097152-OFF_)/8192)/10;
 	MS5837_TEMP=(MS5837_TEMP-T2)/100;
 	return Pressure;
 }
@@ -148,13 +150,17 @@ void ms5837_reset(void)
 // 获取压力数据
 float get_ms5837_data(void)
 {
-	int32_t pressure;
+	double pressure;
 	double ms5837_value;
 	MS583703BA_getTemperature();//获取温度
 	pressure = MS583703BA_getPressure();   //获取压力
-	ms5837_value = (double)pressure/10;
+	ms5837_value = pressure; // 单位是：mbar，1 mbar=100 Pa
 	float depth = 0.0f;
-	depth = (ms5837_value*100 - 101300)/(1029*9.80665);
+	// 大气压=101.325 Kpa=101325 Pa
+	// P = rho*g*h
+	// h = P/(rho*g)
+	depth = 100*(ms5837_value*100 - 101300)/(1029*9.80665); // 单位是厘米
+	global_depth = depth;
 	return depth;
 }
 

@@ -101,7 +101,7 @@
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
         <bEvRecOn>1</bEvRecOn>
-        <nTsel>0</nTsel>
+        <nTsel>5</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -112,7 +112,7 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>BIN\UL2CM3.DLL</pMon>
+        <pMon>STLink\ST-LINKIII-KEIL_SWO.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
@@ -152,7 +152,7 @@
           <Type>0</Type>
           <LineNumber>488</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134247740</Address>
+          <Address>134247796</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,6 +163,38 @@
           <ExecCommand></ExecCommand>
           <Expression>\\platform\../APPLICATION/CommandAnalysis/command_analysis_app.c\488</Expression>
         </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>152</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134251588</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>D:\2-浠ｇ爜浠撳簱\Keil Workspace\BoxFish\APPLICATION\DataShow\data_show_app.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\platform\../APPLICATION/DataShow/data_show_app.c\152</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>164</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134240910</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>D:\2-浠ｇ爜浠撳簱\Keil Workspace\BoxFish\HARDWARE\MS5837\ms5837.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\platform\../HARDWARE/MS5837/ms5837.c\164</Expression>
+        </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
@@ -170,12 +202,27 @@
           <WinNumber>1</WinNumber>
           <ItemText>chrTemp[30]</ItemText>
         </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>depth</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>global_depth</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ms5837_value</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>chrTemp[29]</ItemText>
+          <ItemText>global_depth</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
