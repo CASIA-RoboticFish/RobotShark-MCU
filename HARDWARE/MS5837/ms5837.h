@@ -30,7 +30,7 @@ History:
 #define MS5837_OSR8192					   0x58
 
 
-int32_t MS583703BA_getPressure(void);
+double MS583703BA_getPressure(void);
 void MS583703BA_getTemperature(void);
 unsigned long MS583703BA_getConversion(uint8_t command);
 
