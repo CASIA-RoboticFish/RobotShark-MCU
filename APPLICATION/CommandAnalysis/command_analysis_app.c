@@ -115,8 +115,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		  break;
 		
 		case SET_SWIM_UP:
-			set_pect_fin_angle(-0.6, 0);
-			set_pect_fin_angle(0.6, 1);
+			set_pect_fin_angle(-0.8, 0);
+			set_pect_fin_angle(0.8, 1);
 			boxfishstate.swim_param.pecfin_angle[0] = -0.6;
 			boxfishstate.swim_param.pecfin_angle[1] = 0.6;
 			#ifdef PRINT_COMMAND_EN
@@ -125,8 +125,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_SWIM_DOWN:
-			set_pect_fin_angle(0.6, 0);
-			set_pect_fin_angle(-0.6, 1);
+			set_pect_fin_angle(0.8, 0);
+			set_pect_fin_angle(-0.8, 1);
 			boxfishstate.swim_param.pecfin_angle[0] = 0.6;
 			boxfishstate.swim_param.pecfin_angle[1] = -0.6;
 			#ifdef PRINT_COMMAND_EN

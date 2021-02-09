@@ -23,11 +23,21 @@ History:
 #define SERVO_MIN_VALUE 900
 
 // 舵机中位
-#define SERVO1_MID_VALUE 1500
-#define SERVO2_MID_VALUE 1500
-#define SERVO3_MID_VALUE 1480
+//机器鱼1
+#define SERVO1_MID_VALUE 1550
+#define SERVO2_MID_VALUE 1550
+#define SERVO3_MID_VALUE 1450
 #define SERVO4_MID_VALUE 1500
-
+////机器鱼2
+//#define SERVO1_MID_VALUE 1520
+//#define SERVO2_MID_VALUE 1650
+//#define SERVO3_MID_VALUE 1500
+//#define SERVO4_MID_VALUE 1500
+////机器鱼3
+//#define SERVO1_MID_VALUE 1450
+//#define SERVO2_MID_VALUE 1500
+//#define SERVO3_MID_VALUE 1480
+//#define SERVO4_MID_VALUE 1500
 
 static void pwm_tim4_init ( uint32_t arr, uint32_t psc );
 void servo_pwm_set_compare( uint16_t compare_value, uint8_t channel );

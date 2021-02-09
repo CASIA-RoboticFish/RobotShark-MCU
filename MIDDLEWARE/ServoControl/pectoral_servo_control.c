@@ -10,7 +10,7 @@ History:
 #include "pectoral_servo_control.h"
 
 static float s_f32_pectservo_angles[PECTORAL_SERVO_AMOUNT] = {0.0f, 0.0f};
-static uint32_t s_u32_pectservo_center_pwms[PECTORAL_SERVO_AMOUNT] = {1500, 1500};
+static uint32_t s_u32_pectservo_center_pwms[PECTORAL_SERVO_AMOUNT] = {SERVO1_MID_VALUE, SERVO2_MID_VALUE};
 static uint32_t s_u32_pectservo_current_pwms[PECTORAL_SERVO_AMOUNT] = {1500, 1500};
 static float s_f32_pectservo_pwm_per_rad[PECTORAL_SERVO_AMOUNT] = {500, 500};
 

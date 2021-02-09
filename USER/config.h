@@ -35,13 +35,18 @@ typedef enum BOXFISHID
 #define BOXFISH_5_TIME_STOP  180
 
 // 以下为用户需要修改的地方，要把Local ID改为对应的
+//机器鱼1
 #define LOCAL_ID BOXFISH_1
 #define LOCAL_TIME_START BOXFISH_1_TIME_START // 本机ID
 #define LOCAL_TIME_STOP  BOXFISH_1_TIME_STOP  // 本机ID
-
+////机器鱼2
 //#define LOCAL_ID BOXFISH_2
 //#define LOCAL_TIME_START BOXFISH_2_TIME_START // 本机ID
 //#define LOCAL_TIME_STOP  BOXFISH_2_TIME_STOP  // 本机ID
+////机器鱼3
+//#define LOCAL_ID BOXFISH_3
+//#define LOCAL_TIME_START BOXFISH_3_TIME_START // 本机ID
+//#define LOCAL_TIME_STOP  BOXFISH_3_TIME_STOP  // 本机ID
 
 // data_storage_app中和data_sendback_app中都需要用到的常数
 // 储存数据的长度
