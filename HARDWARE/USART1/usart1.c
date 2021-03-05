@@ -153,7 +153,7 @@ void USART1_IRQHandler(void)                	//串口2中断服务程序
 			}
 			
 			//任务的内建消息队列，向任务发送消息
-			OSTaskQPost(&CommandAnalysisFriendTCB,
+			OSTaskQPost(&CommandAnalysisFriendTCB,   //
 					(void *)Res,
 					sizeof(Res),
 					OS_OPT_POST_FIFO,

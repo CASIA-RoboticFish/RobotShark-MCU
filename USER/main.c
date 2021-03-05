@@ -10,6 +10,13 @@ History:
 #include "common.h"
 #include "main.h"
 
+extern uint16_t cordist;
+u8 c_sys_reset[4] = {0x5A, 0x04, 0x02, 0x60};
+u8 c_get_dist[5] = {0x5A, 0x05, 0x00, 0x01, 0x60};
+u8 c_uart2iic[5] = {0x5A, 0x05, 0x0A, 0x00, 0x69};
+u8 c_iic2uart[5] = {0x5A, 0x05, 0x0A, 0x01, 0x6A};
+u8 c_save_cfg[4] = {0x5A, 0x04, 0x11, 0x6F};
+
 // 初始化机器人结构体
 BOXFISH boxfishstate = 
 {
@@ -34,47 +41,31 @@ ROBOTARGET robotarget = {0.0f, 0.0f};
 ********************************************************************************/
 void test_task(void *p_arg)
 {
-	OS_ERR err;
+    
+    OS_ERR err;
 	OS_TICK tick;
+    CPU_TS ts;
+    OS_MSG_SIZE size;
+    uint8_t rx_data;
 	uint16_t ret = 0;
 	float depth = 0.0f;
-	while(1)
+    uint8_t TFmini_forward[TFMINI_DATA_Len];
+    uint16_t TFmini_results[2];
+
+    uint8_t if_data_creticable = 0;
+    uint8_t send_length = (uint8_t) (sizeof(c_get_dist) /sizeof(c_get_dist[0]));
+                                                                                 	while(1)
 	{
-//  	BuffPrintf("hello,world\n");
-//		TIM_SetCompare2(TIM4, 1800);
-//		OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err);
-//		TIM_SetCompare2(TIM4, 1500);
-//		res = mf_open("message.txt", FA_READ);
-//		if(res)
-//			BuffPrintf("File open failed, error: %d\n", res);
-//		mf_read(14);
-//		mf_close();
-//		BuffPrintf(fatbuf);
-		//BuffPrintf("uart\n");
-		//USART_SendData(USART3,0xff);
-//		USART_SendData(USART1,0xEE);
-//		TIM_SetCompare3(TIM4, 1800);
-//		USART_SendData(USART6, 0xff);
-//		led_on();
-//		TIM_SetCompare4(TIM4, 1500);
-//		OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err);
-//		TIM_SetCompare4(TIM4, 1000);
-//		OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err);
-		led_on();
-//		depth = get_ms5837_data();
-//		BuffPrintf("depth: %f\n", depth);
-		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err);
-		led_off();
-//		depth = get_ms5837_data();
-//		BuffPrintf("depth: %f\n", depth);
-		//USART_SendData(USART3,0xdd);
-//		USART_SendData(USART1,0xaa);
-		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err);
-	//	TIM_SetCompare3(TIM4, 1500);
-//		USART_SendData(USART6, 0xee);
-//		led_off();
-	//	OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err);
-//		USART_SendData(USART6, 0xee);
+//        TFmini_read_bytes(TFMINI, TFMINI_DATA_Len, send_length, &c_get_dist[0], &TFmini_forward[0]);
+//		if_data_creticable = TFmini_data_analyse(&TFmini_forward[0], &TFmini_results[0]);
+		if (ForwardDetect == 0x00)
+        {
+            led_on();
+        }
+		else
+        {
+            led_off();
+        }
 	}
 }
 
@@ -123,23 +114,25 @@ void start_task(void *p_arg)
 	// Application任务区，这部分任务是系统正常运行时将会启动的任务
 	/*****************************************************************************/
 	// 传感器数据刷新与存储
-	sensors_update_app_init(); // 传感器数据更新，定时地访问传感器，将数据写入boxfishstate结构体中，优先级5
-	data_storage_app_init();   // 数据储存（SD卡），将数据写入储存卡，优先级10
+	// sensors_update_app_init(); // 传感器数据更新，定时地访问传感器，将数据写入boxfishstate结构体中，优先级5
+	// data_storage_app_init();   // 数据储存（SD卡），将数据写入储存卡，优先级10
 					 
 	// 控制部分						 
-	swim_control_app_init();     // 游动控制，基础的游动控制,优先级6
+	// swim_control_app_init();     // 游动控制，基础的游动控制,优先级6
+	
+	// collision_avoidance_app_init();   //避障控制，优先级应高于游动 
 	// pantilt_control_task_init(); // 云台控制，这是我自己平台用到的程序，优先级13
-	depth_control_app_init();    // 深度控制，优先级9
+	// depth_control_app_init();    // 深度控制，优先级9
 					 
 	// 通讯部分						 
-	command_analysis_app_init();       // 上位机通讯，优先级7
-	command_analysis_slave_app_init(); // 树莓派通讯（或飞轮），优先级8
-	command_analysis_friend_app_init();   // 水下多机器人分布式通讯，消息接收，优先级13	
-	distributed_communicate_app_init(); // 水下多机器人分布式通讯，消息发布，优先级4						
+	// command_analysis_app_init();       // 上位机通讯，优先级7
+	// command_analysis_slave_app_init(); // 树莓派通讯（或飞轮），优先级8
+	// command_analysis_friend_app_init();   // 水下多机器人分布式通讯，消息接收，优先级13	
+	// distributed_communicate_app_init(); // 水下多机器人分布式通讯，消息发布，优先级4						
 //					 
 	// 上位机部分，与上位机相关的程序
-	data_sendback_app_init(); // 回传数据，优先级12
-	data_show_app_init();     // 回传上位机曲线数据，优先级11
+	// data_sendback_app_init(); // 回传数据，优先级12
+	// data_show_app_init();     // 回传上位机曲线数据，优先级11
 	/*****************************************************************************/
 	/*****************************************************************************/	
 
@@ -149,11 +142,11 @@ void start_task(void *p_arg)
 	//挂起任务（测试任务）	，挂起就是不执行
 	/*****************************************************************************/		
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err); 
-	OS_TaskSuspend((OS_TCB*)&TestTaskTCB,&err); 
+//	OS_TaskSuspend((OS_TCB*)&TestTaskTCB,&err); 
 	/*****************************************************************************/
 	/*****************************************************************************/	
 
-	OS_CRITICAL_EXIT(); //退出临界区
+	OS_CRITICAL_EXIT(); //退出临界区,打开中断
 }
 
 /********************************************************************************
@@ -170,7 +163,7 @@ int main(void)
 {
 	OS_ERR err; // 保存错误信息
 	CPU_SR_ALLOC(); //宏，申明存储空间，用来存储当前CPU的中断状态
-	
+	u8 temp = 0x01;
 	// 系统初始化阶段
 	delay_init(168); // 时钟初始化
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //设置了只用两位寄存器来指定中断的抢占式优先级
@@ -179,37 +172,42 @@ int main(void)
 	// LED初始化
 	led_init();
 	// 发送串口初始化
-	uart3_init(19200);
-	// 接收串口初始化
-	uart2_init(9600);
-	// 飞轮通信串口
-	uart6_init(115200);
-	// 水下分布式通信串口
-	uart1_init(9600);
+//	uart3_init(19200);
+//	// 接收串口初始化
+//	uart2_init(9600);
+//	// 飞轮通信串口  
+    uart6_init(115200);
+//	// 水下分布式通信串口
+//	uart1_init(9600);
 	// 胸鳍、尾鳍舵机初始化
-	servo_init();
+	// servo_init();
 	// ADS1115初始化
-	ads1115_init();
+	// ads1115_init();
 	// MS5837初始化
-	ms5837_init();
+	// ms5837_init();
 	// SD卡初始化
-	while(SD_Init())//检测不到SD卡
-	{
-		MyPrintf("SD Card Error!");
-		delay_ms(500);					
-		MyPrintf("Please Check! ");
-		delay_ms(500);
-	}
+//	while(SD_Init())//检测不到SD卡
+//	{
+//		MyPrintf("SD Card Error!");
+//		delay_ms(500);					
+//		MyPrintf("Please Check! ");
+//		delay_ms(500);
+//	}
 	// 初始化内部内存池 // 没有使用UCOS自带的，因为不好用
 	my_mem_init(SRAMIN);
 	// 文件系统初始化
-	exfuns_init();
+	//exfuns_init();
 	mf_mount("0:",1);
 	
 	// IMU初始化 ,IMU不再采用MPU6050，而是采用JY901
 	// JY901无需初始化，只需要等待一段时间，让其自动初始化完成	
-	JY901_init();
-	delay_ms(2000);
+	// JY901_init();
+	TFmini_init();
+    
+    temp = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_4);
+    E18_init();
+    temp = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_4);
+    delay_ms(2000);
 	
 //#ifdef MPU_EXTERNAL	
 //	// MPU9150初始化(1)——外接IMU

@@ -30,6 +30,8 @@ History:
 #include "ads1115.h"
 #include "ms5837.h"
 #include "sdio_sdcard.h"
+#include "TFmini.h"
+#include  "E18.h"
 
 //#include "tail_servo_pwm.h" // V1版的驱动，V2版将其去除了
 //#include "pectoral_servo_pwm.h" // V1版的驱动，V2版将其去除了
@@ -50,6 +52,7 @@ History:
 #include "command_analysis_app.h"
 #include "command_analysis_slave_app.h"
 #include "command_analysis_friend_app.h"
+#include "collision_avoidance_app.h"
 #include "sensors_update_app.h"
 #include "data_storage_app.h"
 #include "data_sendback_app.h"

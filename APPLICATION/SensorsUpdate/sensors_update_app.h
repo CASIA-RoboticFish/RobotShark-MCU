@@ -20,6 +20,7 @@ History:
 #include "jy901.h"
 #include "varistor.h"
 #include "ms5837.h"
+#include "TFmini.h"
 
 #include "rflink.h"
 #include "uart6_printf.h"

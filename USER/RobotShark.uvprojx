@@ -10,13 +10,13 @@
       <TargetName>Template</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F407VG</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.14.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32F4xx_DFP.2.13.0</PackID>
+          <PackURL>http://www.keil.com/pack</PackURL>
           <Cpu>IROM(0x08000000,0x100000) IRAM(0x20000000,0x20000) IRAM2(0x10000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -328,11 +328,14 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
+            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\CORE\CMSIS\DSP_Lib\Includes;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\FWLIB\inc;..\UCOSIII\uC-CPU;..\UCOSIII\uC-CPU\ARM-Cortex-M4\RealView;..\UCOSIII\uC-LIB;..\UCOSIII\uC-LIB\Ports\ARM-Cortex-M4\RealView;..\UCOSIII\UCOS_BSP;..\UCOSIII\uCOS_CONFIG;..\UCOSIII\uCOS-III\Ports;..\UCOSIII\uCOS-III\Ports\ARM-Cortex-M4\Generic\RealView;..\UCOSIII\uCOS-III\Source;..\HARDWARE\LED;..\HARDWARE\IIC;..\HARDWARE\MPU6050;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\ReactionWheel;..\HARDWARE\USART1;..\HARDWARE\USART2;..\HARDWARE\USART3;..\HARDWARE\USART6;..\HARDWARE\VALVE;..\HARDWARE\SERVO;..\HARDWARE\PUMP;..\HARDWARE\MOTOR;..\HARDWARE\VARISTOR;..\HARDWARE\ADS1115;..\HARDWARE\MS5837;..\HARDWARE\JY901;..\HARDWARE\SDIO;..\MIDDLEWARE\BuffPrintf;..\MIDDLEWARE\CPG;..\MIDDLEWARE\MATH;..\MIDDLEWARE\ServoControl;..\MIDDLEWARE\RFLink;..\MIDDLEWARE\MALLOC;..\MIDDLEWARE\FATFS\src;..\MIDDLEWARE\FATFS\src\option;..\MIDDLEWARE\FATFS\exfuns;..\MIDDLEWARE\UART6Printf;..\APPLICATION\SwimControl;..\APPLICATION\CommandAnalysis;..\APPLICATION\DiskAttach;..\APPLICATION\SensorsUpdate;..\APPLICATION\DataStorage;..\APPLICATION\DataSendBack;..\APPLICATION\DataShow;..\APPLICATION\CommandAnalysisToSlave;..\APPLICATION\PantiltControl;..\APPLICATION\TargetTracking;..\APPLICATION\DepthControl;..\APPLICATION\DistributedComunicate;..\APPLICATION\CommandAnalysisFromFriend</IncludePath>
+              <IncludePath>..\CORE;..\CORE\CMSIS\DSP_Lib\Includes;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\FWLIB\inc;..\UCOSIII\uC-CPU;..\UCOSIII\uC-CPU\ARM-Cortex-M4\RealView;..\UCOSIII\uC-LIB;..\UCOSIII\uC-LIB\Ports\ARM-Cortex-M4\RealView;..\UCOSIII\UCOS_BSP;..\UCOSIII\uCOS_CONFIG;..\UCOSIII\uCOS-III\Ports;..\UCOSIII\uCOS-III\Ports\ARM-Cortex-M4\Generic\RealView;..\UCOSIII\uCOS-III\Source;..\HARDWARE\LED;..\HARDWARE\IIC;..\HARDWARE\MPU6050;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\ReactionWheel;..\HARDWARE\USART1;..\HARDWARE\USART2;..\HARDWARE\USART3;..\HARDWARE\USART6;..\HARDWARE\VALVE;..\HARDWARE\SERVO;..\HARDWARE\PUMP;..\HARDWARE\MOTOR;..\HARDWARE\VARISTOR;..\HARDWARE\ADS1115;..\HARDWARE\MS5837;..\HARDWARE\JY901;..\HARDWARE\SDIO;..\MIDDLEWARE\BuffPrintf;..\MIDDLEWARE\CPG;..\MIDDLEWARE\MATH;..\MIDDLEWARE\ServoControl;..\MIDDLEWARE\RFLink;..\MIDDLEWARE\MALLOC;..\MIDDLEWARE\FATFS\src;..\MIDDLEWARE\FATFS\src\option;..\MIDDLEWARE\FATFS\exfuns;..\MIDDLEWARE\UART6Printf;..\APPLICATION\SwimControl;..\APPLICATION\CommandAnalysis;..\APPLICATION\DiskAttach;..\APPLICATION\SensorsUpdate;..\APPLICATION\DataStorage;..\APPLICATION\DataSendBack;..\APPLICATION\DataShow;..\APPLICATION\CommandAnalysisToSlave;..\APPLICATION\PantiltControl;..\APPLICATION\TargetTracking;..\APPLICATION\DepthControl;..\APPLICATION\DistributedComunicate;..\APPLICATION\CommandAnalysisFromFriend;..\HARDWARE\TFMINI;..\APPLICATION\CollisionAvoidance;..\HARDWARE\E18Omdhon</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -345,6 +348,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -379,6 +383,56 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath>..\APPLICATION\CollisionAvoidance</IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
@@ -690,6 +744,16 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\JY901\jy901.c</FilePath>
             </File>
+            <File>
+              <FileName>TFmini.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\TFMINI\TFmini.c</FilePath>
+            </File>
+            <File>
+              <FileName>E18.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\E18Omdhon\E18.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -804,6 +868,66 @@
               <FileName>command_analysis_friend_app.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APPLICATION\CommandAnalysisFromFriend\command_analysis_friend_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>collision_avoidance_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APPLICATION\CollisionAvoidance\collision_avoidance_app.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath>..\APPLICATION\CollisionAvoidance;..\..\box-fish-stm32;..\USER</IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>exhibition.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\APPLICATION\Exhibition\exhibition.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1075,5 +1199,11 @@
       </Groups>
     </Target>
   </Targets>
+
+  <RTE>
+    <apis/>
+    <components/>
+    <files/>
+  </RTE>
 
 </Project>

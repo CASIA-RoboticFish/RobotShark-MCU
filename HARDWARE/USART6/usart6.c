@@ -9,15 +9,17 @@ History:
 *****************************************************************************/
 #include "sys.h"
 #include "usart6.h"
+#include "TFmini.h"
 #include "command_analysis_slave_app.h"
-extern OS_TCB CommandAnalysisSlaveTCB;
+
+uint16_t cordist = 0;
+//extern OS_TCB TestTaskTCB;   //CommandAnalysisSlaveTCB;
 
 //////////////////////////////////////////////////////////////////////////////////
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_UCOS
 #include "includes.h"                   //ucos 使用
 #endif
-
 
 #if EN_USART6_RX   //如果使能了接收
 //串口1中断服务程序
@@ -111,38 +113,61 @@ void USART6_IRQHandler(void)                	//串口2中断服务程序
 {
 	u8 Res;
 	OS_ERR err;
+    uint32_t i = 0;
+    uint8_t chk_cal = 0;
+
 #if SYSTEM_SUPPORT_OS 		//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntEnter();    
 #endif
 	if(USART_GetITStatus(USART6, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 	{
 		Res =USART_ReceiveData(USART6);//(USART3->DR);	//读取接收到的数据
+        
+        USART6_RX_BUF[USART6_RX_STA&0X3FFF] = Res;
+        USART6_RX_STA++;
+        
+        if (TFMINI_DATA_Len == USART6_RX_STA)
+        {
+            if ((USART6_RX_BUF[0] == TFMINI_DATA_HEAD)&&(USART6_RX_BUF[1]==TFMINI_DATA_HEAD))
+            {
+                for(i = 0; i < (TFMINI_DATA_Len - 1); i++)
+                {
+                    chk_cal += USART6_RX_BUF[i];
+                }
+                if (chk_cal == USART6_RX_BUF[TFMINI_DATA_Len - 1])
+                {
+                    cordist = USART6_RX_BUF[2] | (USART6_RX_BUF[3] << 8);
+                }
+            }
+            USART6_RX_STA = 0;
+        }
+
 		
-		if((USART6_RX_STA&0x8000)==0)//接收未完成
-		{
-			if(USART6_RX_STA&0x4000)//接收到了0x0d
-			{
-				if(Res!=0x0a)USART6_RX_STA=0;//接收错误,重新开始
-				else USART6_RX_STA|=0x8000;	//接收完成了 
-			}
-			else //还没收到0X0D
-			{	
-				if(Res==0x0d)USART6_RX_STA|=0x4000;
-				else
-				{
-					USART6_RX_BUF[USART6_RX_STA&0X3FFF]=Res ;
-					USART6_RX_STA++;
-					if(USART6_RX_STA>(USART6_REC_LEN-1))USART6_RX_STA=0;//接收数据错误,重新开始接收	  
-				}		 
-			}
-			// 写接收程序***
-			//任务的内建消息队列，向任务发送消息
-			OSTaskQPost(&CommandAnalysisSlaveTCB,
-									(void *)Res,
-									sizeof(Res),
-									OS_OPT_POST_FIFO,
-									&err);
-		}   		 
+//		if((USART6_RX_STA&0x8000)==0)//接收未完成
+//		{
+//			if(USART6_RX_STA&0x4000)//接收到了0x0d
+//			{
+//				if(Res!=0x0a)USART6_RX_STA=0;//接收错误,重新开始
+//				else USART6_RX_STA|=0x8000;	//接收完成了 
+//			}
+//			else //还没收到0X0D
+//			{	
+//				if(Res==0x0d)USART6_RX_STA|=0x4000;
+//				else
+//				{
+//					USART6_RX_BUF[USART6_RX_STA&0X3FFF]=Res ;
+//					USART6_RX_STA++;
+//					if(USART6_RX_STA>(USART6_REC_LEN-1))USART6_RX_STA=0;//接收数据错误,重新开始接收	  
+//				}		 
+//			}
+//			// 写接收程序***
+//			//任务的内建消息队列，向任务发送消息
+//			OSTaskQPost(&TestTaskTCB,    // CommandAnalysisSlaveTCB
+//                        (void *)Res,
+//                        sizeof(Res),
+//                        OS_OPT_POST_FIFO,
+//                        &err);
+//		}   		 
   } 
 #if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 
