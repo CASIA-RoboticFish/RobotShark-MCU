@@ -8,7 +8,7 @@ Date: 2019.07.03
 History: 
 *****************************************************************************/
 #include "data_show_app.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR DataShowTmr;
 static OS_TCB DataShowTCB;
@@ -53,13 +53,13 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.imu_data.roll),  4);
+						memcpy(databuf, &(robosharkstate.imu_data.roll),  4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.imu_data.pitch),  4);
+						memcpy(databuf, &(robosharkstate.imu_data.pitch),  4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.imu_data.yaw),  4);
+						memcpy(databuf, &(robosharkstate.imu_data.yaw),  4);
 						break;
 				}
 				break;
@@ -68,13 +68,13 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.imu_data.accelx), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.accelx), 4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.imu_data.accely), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.accely), 4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.imu_data.accelz), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.accelz), 4);
 						break;
 				}
 				break;
@@ -83,20 +83,20 @@ static void data_show_app_task(void * p_arg)
 				switch(s_dataaxis)
 				{
 					case 1:
-						memcpy(databuf, &(boxfishstate.imu_data.gyrox), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.gyrox), 4);
 						break;
 					case 2:
-						memcpy(databuf, &(boxfishstate.imu_data.gyroy), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.gyroy), 4);
 						break;
 					case 3:
-						memcpy(databuf, &(boxfishstate.imu_data.gyroz), 4);
+						memcpy(databuf, &(robosharkstate.imu_data.gyroz), 4);
 						break;
 				}
 				break;
 			
 			
 			case READ_DEPTH:
-				memcpy(databuf, &(boxfishstate.depth), 4);
+				memcpy(databuf, &(robosharkstate.depth), 4);
 				break;
 			
 			default:

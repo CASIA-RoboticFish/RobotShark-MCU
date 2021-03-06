@@ -9,7 +9,7 @@ History:
 *****************************************************************************/
 #include "collision_avoidance_app.h"
 
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 static OS_TMR CollisionAvoidanceTmr; // 定义一个定时器
 static OS_TCB CollisionAvoidanceTCB; // 定义一个任务控制块
 __align(8) CPU_STK COLLISION_AVOIDANCE_APP_TASK_STK[COLLISION_AVOIDANCE_APP_STK_SIZE]; // 定义任务堆栈
@@ -33,7 +33,7 @@ static void collision_avoidance_app_task(void * p_arg)
     {
         OSTaskSemPend(0, OS_OPT_PEND_BLOCKING, &ts, &err);
         now_os_tick = OSTimeGet(&err);
-        boxfishstate.timestamp = (float)now_os_tick/(float)(OS_CFG_TICK_RATE_HZ);
+        robosharkstate.timestamp = (float)now_os_tick/(float)(OS_CFG_TICK_RATE_HZ);
 
     }
 }

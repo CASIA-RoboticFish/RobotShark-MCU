@@ -16,7 +16,7 @@ __align(8) CPU_STK  DISTCOM_TASK_STK[DISTCOM_STK_SIZE];
 
 
 // 
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 /*-----------------------------------------------------------------------------
  *  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -74,8 +74,8 @@ void distributed_communicate_app_task ( void * p_arg )
 				&err);
 		
 	now_os_tick = OSTimeGet(&err);
-	//float ttt = (float)(now_os_tick - boxfishstate.communicate_basetime_tick)*1000/(float)(OS_CFG_TICK_RATE_HZ);
-	commun_time = (int)((float)(now_os_tick - boxfishstate.communicate_basetime_tick)*1000/(float)(OS_CFG_TICK_RATE_HZ))%COMMUNICATE_LOOPTIME;
+	//float ttt = (float)(now_os_tick - robosharkstate.communicate_basetime_tick)*1000/(float)(OS_CFG_TICK_RATE_HZ);
+	commun_time = (int)((float)(now_os_tick - robosharkstate.communicate_basetime_tick)*1000/(float)(OS_CFG_TICK_RATE_HZ))%COMMUNICATE_LOOPTIME;
 	// 对于BOXFISH_1，开始发送的时间是0ms，结束是10ms，如果commun_time在这个时间内，那么就可以发送
 	// 如果不在,比如commun_time是25，那么就不能发送，要等待下一次机会
 	//int id = LOCAL_TIME_START;

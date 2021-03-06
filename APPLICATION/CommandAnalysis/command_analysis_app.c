@@ -10,7 +10,7 @@ History:
 #include "command_analysis_app.h"
 #include "swim_control_app.h"
 
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 
 OS_TCB CommandAnalysisTCB;
@@ -35,7 +35,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SYNCHRONIZE_CLOCK:
-			boxfishstate.communicate_basetime_tick = OSTimeGet(&err); // 同步时间
+			robosharkstate.communicate_basetime_tick = OSTimeGet(&err); // 同步时间
 			RFLink_sendStruct(BOXFISH_5, SYNCHRONIZE_CLOCK , databuf , 0);
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SYNCHRONIZE_CLOCK\n");
@@ -44,7 +44,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case SET_SWIM_RUN:
 			swim_control_start();
-			// boxfishstate.swim_state = SWIM_RUN;
+			// robosharkstate.swim_state = SWIM_RUN;
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_RUN\n");
 			#endif
@@ -52,7 +52,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			
 		case SET_SWIM_STOP:
 			swim_control_stop();
-			// boxfishstate.swim_state = SWIM_STOP;
+			// robosharkstate.swim_state = SWIM_STOP;
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_STOP\n");
 			#endif
@@ -60,7 +60,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case SET_SWIM_FORCESTOP:
 			swim_control_forcestop();
-			// boxfishstate.swim_state = SWIM_FORCESTOP;
+			// robosharkstate.swim_state = SWIM_FORCESTOP;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_FORCESTOP\n");
@@ -68,9 +68,9 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_SWIM_SPEEDUP:
-			var = boxfishstate.swim_param.motion_freq + 0.2;
+			var = robosharkstate.swim_param.motion_freq + 0.2;
 			set_tail_freq(var);
-			boxfishstate.swim_param.motion_freq = var;
+			robosharkstate.swim_param.motion_freq = var;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_SPEEDUP\n");
@@ -78,9 +78,9 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_SWIM_SPEEDDOWN:
-			var = boxfishstate.swim_param.motion_freq - 0.2;
+			var = robosharkstate.swim_param.motion_freq - 0.2;
 			set_tail_freq(var);
-			boxfishstate.swim_param.motion_freq = var;
+			robosharkstate.swim_param.motion_freq = var;
 		
 		  #ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_SPEEDDOWN\n");
@@ -89,7 +89,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case SET_SWIM_LEFT:
 			set_tail_offset(-0.3);
-			boxfishstate.swim_param.motion_offset = -30;
+			robosharkstate.swim_param.motion_offset = -30;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_LEFT\n");
@@ -98,7 +98,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case SET_SWIM_STRAIGHT:
 			set_tail_offset(0);
-			boxfishstate.swim_param.motion_offset = 0;
+			robosharkstate.swim_param.motion_offset = 0;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_RIGHT\n");
@@ -107,7 +107,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		
 		case SET_SWIM_RIGHT:
 			set_tail_offset(0.3);
-			boxfishstate.swim_param.motion_offset = 30;
+			robosharkstate.swim_param.motion_offset = 30;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_RIGHT\n");
@@ -117,8 +117,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_SWIM_UP:
 			set_pect_fin_angle(-0.8, 0);
 			set_pect_fin_angle(0.8, 1);
-			boxfishstate.swim_param.pecfin_angle[0] = -0.6;
-			boxfishstate.swim_param.pecfin_angle[1] = 0.6;
+			robosharkstate.swim_param.pecfin_angle[0] = -0.6;
+			robosharkstate.swim_param.pecfin_angle[1] = 0.6;
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_UP\n");
 			#endif
@@ -127,8 +127,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_SWIM_DOWN:
 			set_pect_fin_angle(0.8, 0);
 			set_pect_fin_angle(-0.8, 1);
-			boxfishstate.swim_param.pecfin_angle[0] = 0.6;
-			boxfishstate.swim_param.pecfin_angle[1] = -0.6;
+			robosharkstate.swim_param.pecfin_angle[0] = 0.6;
+			robosharkstate.swim_param.pecfin_angle[1] = -0.6;
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SWIM_DOWN\n");
 			#endif
@@ -137,7 +137,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_SINE_MOTION_AMP:
 			data = atof(message);
 			set_tail_amp(data);
-			boxfishstate.swim_param.motion_amp = data;
+			robosharkstate.swim_param.motion_amp = data;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SINE_MOTION_AMP\n");
@@ -147,7 +147,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_SINE_MOTION_FREQ:
 			data = atof(message);
 			set_tail_freq(data);
-			boxfishstate.swim_param.motion_freq = data;
+			robosharkstate.swim_param.motion_freq = data;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SINE_MOTION_FREQ\n");
@@ -157,7 +157,7 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_SINE_MOTION_OFFSET:
 			data = atof(message);
 			set_tail_offset(data);
-			boxfishstate.swim_param.motion_offset = data;
+			robosharkstate.swim_param.motion_offset = data;
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_SINE_MOTION_OFFSET\n");
@@ -165,8 +165,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_LEFTPECFIN_UP:
-			boxfishstate.swim_param.pecfin_angle[0] += 0.27;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[0], 0);
+			robosharkstate.swim_param.pecfin_angle[0] += 0.27;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[0], 0);
 			
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_LEFTPECFIN_UP\n");
@@ -174,8 +174,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_LEFTPECFIN_ZERO:
-			boxfishstate.swim_param.pecfin_angle[0] = 0.0f;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[0], 0);
+			robosharkstate.swim_param.pecfin_angle[0] = 0.0f;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[0], 0);
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_LEFTPECFIN_ZERO\n");
@@ -183,8 +183,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_LEFTPECFIN_DOWN:
-			boxfishstate.swim_param.pecfin_angle[0] -= 0.27;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[0], 0);
+			robosharkstate.swim_param.pecfin_angle[0] -= 0.27;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[0], 0);
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_LEFTPECFIN_DOWN\n");
@@ -192,8 +192,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_RIGHTPECFIN_UP:
-			boxfishstate.swim_param.pecfin_angle[1] -= 0.27;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[1], 1);
+			robosharkstate.swim_param.pecfin_angle[1] -= 0.27;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[1], 1);
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_RIGHTPECFIN_UP\n");
@@ -201,8 +201,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_RIGHTPECFIN_ZERO:
-			boxfishstate.swim_param.pecfin_angle[1] = 0.0f;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[1], 1);
+			robosharkstate.swim_param.pecfin_angle[1] = 0.0f;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[1], 1);
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_RIGHTPECFIN_ZERO\n");
@@ -210,8 +210,8 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case SET_RIGHTPECFIN_DOWN:
-			boxfishstate.swim_param.pecfin_angle[1] += 0.27;
-			set_pect_fin_angle(boxfishstate.swim_param.pecfin_angle[1], 1);
+			robosharkstate.swim_param.pecfin_angle[1] += 0.27;
+			set_pect_fin_angle(robosharkstate.swim_param.pecfin_angle[1], 1);
 		
 			#ifdef PRINT_COMMAND_EN
 				BuffPrintf("SET_RIGHTPECFIN_DOWN\n");
@@ -245,10 +245,17 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 				BuffPrintf("SET_DEPTHCTL_PARAM\n");
 			#endif
 			break;
+		case SET_AUTOCTL_RUN:
+			robosharkstate.autoctl_state = AutoCTL_RUN;
+			break;
 		
+		case SET_AUTOCTL_STOP:
+			robosharkstate.autoctl_state = AutoCTL_STOP;
+			break;
+			
 		case READ_ROBOT_STATUS:
 			uint8_t rmstatus = 0x00;
-			rmstatus = (uint8_t)((boxfishstate.swim_state & 0x03)<<6);
+			rmstatus = (uint8_t)(((robosharkstate.swim_state & 0x03)<<6) + ((robosharkstate.autoctl_state & 0x01)<<5));
 			memcpy(databuf, &rmstatus, 1);
 			RFLink_sendStruct(FRIEND_ID1, command, databuf, 1);
 		  
@@ -258,9 +265,9 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 			break;
 		
 		case READ_SINE_MOTION_PARAM:
-			memcpy(databuf,   &(boxfishstate.swim_param.motion_amp),    4);
-			memcpy(databuf+4, &(boxfishstate.swim_param.motion_freq),   4);
-			memcpy(databuf+8, &(boxfishstate.swim_param.motion_offset), 4);
+			memcpy(databuf,   &(robosharkstate.swim_param.motion_amp),    4);
+			memcpy(databuf+4, &(robosharkstate.swim_param.motion_freq),   4);
+			memcpy(databuf+8, &(robosharkstate.swim_param.motion_offset), 4);
 			RFLink_sendStruct(FRIEND_ID1,command, databuf, 12);
 		  
 			#ifdef PRINT_COMMAND_EN

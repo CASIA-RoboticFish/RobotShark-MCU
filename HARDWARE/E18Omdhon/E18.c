@@ -21,13 +21,35 @@ void E18_init()
     GPIO_InitTypeDef GPIO_InitStructure;
     RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
     
-    GPIO_InitStructure.GPIO_Pin = E18_forward;   
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_4 | GPIO_Pin_5;   
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
     
-    GPIO_ReadInputDataBit(GPIOB, E18_forward);
+}
 
+// return 1 
+u8 E18_detect(u8 channel)
+{
+	u8 result = 0;
+	switch(channel)
+	{
+		case E18_AHEAD:
+			result = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);
+			break;
+		
+		case E18_LEFT:
+			result = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_4);
+			break;
+		
+		case E18_RIGHT:
+			result = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5);
+			break;
+		
+		default:
+			break;
+	}
+	return result;
 }
 /*****************************************************************************
 函数功能： 做一个滑窗平滑，减少障碍检测跳变的0/1

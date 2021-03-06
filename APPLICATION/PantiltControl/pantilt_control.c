@@ -6,7 +6,7 @@
 * @Description: 
 ********************************************************************************/
 #include "pantilt_control.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 // UCOS相关变量定义
 OS_TCB PantiltControlTaskTCB;
@@ -80,8 +80,8 @@ void pantilt_control_task(void *p_arg)
 		dt = (float)(os_tick_now - last_os_tick) / (float)OS_CFG_TICK_RATE_HZ;
 		last_os_tick = os_tick_now;
 		
-		yaw_angle_now = boxfishstate.imu_data.yaw;
-		gyro_z_now = boxfishstate.imu_data.gyroz;
+		yaw_angle_now = robosharkstate.imu_data.yaw;
+		gyro_z_now = robosharkstate.imu_data.gyroz;
 
 		d_angle = (yaw_angle_now-yaw_angle_last)/dt;
 		yaw_angle_last = yaw_angle_now;
@@ -224,6 +224,6 @@ void pantilt_control_resume(void)
 
 	OS_CRITICAL_EXIT();
 	
-	yaw_target_angle = boxfishstate.imu_data.yaw;
+	yaw_target_angle = robosharkstate.imu_data.yaw;
 	
 }

@@ -8,7 +8,7 @@ Date: 2019.07.03
 History: 
 *****************************************************************************/
 #include "data_storage_app.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR DataStorageTmr;
 static OS_TCB DataStorageTCB;
@@ -70,13 +70,13 @@ static void data_storage_app_task(void * p_arg)
 			case 1:
 				// 这是记录基础数据的文件
 				// 系统时间
-				memcpy(databuf, &(boxfishstate.timestamp), 4);
+				memcpy(databuf, &(robosharkstate.timestamp), 4);
 				// pitch
-				memcpy(databuf+4, &(boxfishstate.imu_data.roll), 4);
+				memcpy(databuf+4, &(robosharkstate.imu_data.roll), 4);
 				// roll
-				memcpy(databuf+8, &(boxfishstate.imu_data.pitch), 4);
+				memcpy(databuf+8, &(robosharkstate.imu_data.pitch), 4);
 				// yaw
-				memcpy(databuf+12, &(boxfishstate.imu_data.yaw), 4);
+				memcpy(databuf+12, &(robosharkstate.imu_data.yaw), 4);
 				// 结束
 				//*(databuf+20) = 0xff;
 				
@@ -95,9 +95,9 @@ static void data_storage_app_task(void * p_arg)
 		}
 
 //		BuffPrintf("%f, %f，%f，%f\n", tick,
-//																	 boxfishstate.onboard_imu_data.pitch,
-//																	 boxfishstate.onboard_imu_data.roll,
-//																	 boxfishstate.onboard_imu_data.yaw);
+//																	 robosharkstate.onboard_imu_data.pitch,
+//																	 robosharkstate.onboard_imu_data.roll,
+//																	 robosharkstate.onboard_imu_data.yaw);
 
 	}
 	

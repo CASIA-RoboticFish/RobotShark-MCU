@@ -126,15 +126,15 @@ void USART6_IRQHandler(void)                	//串口2中断服务程序
         USART6_RX_BUF[USART6_RX_STA&0X3FFF] = Res;
         USART6_RX_STA++;
         
-        if (TFMINI_DATA_Len == USART6_RX_STA)
+        if (TFMINI_DATA_LEN == USART6_RX_STA)
         {
             if ((USART6_RX_BUF[0] == TFMINI_DATA_HEAD)&&(USART6_RX_BUF[1]==TFMINI_DATA_HEAD))
             {
-                for(i = 0; i < (TFMINI_DATA_Len - 1); i++)
+                for(i = 0; i < (TFMINI_DATA_LEN - 1); i++)
                 {
                     chk_cal += USART6_RX_BUF[i];
                 }
-                if (chk_cal == USART6_RX_BUF[TFMINI_DATA_Len - 1])
+                if (chk_cal == USART6_RX_BUF[TFMINI_DATA_LEN - 1])
                 {
                     cordist = USART6_RX_BUF[2] | (USART6_RX_BUF[3] << 8);
                 }

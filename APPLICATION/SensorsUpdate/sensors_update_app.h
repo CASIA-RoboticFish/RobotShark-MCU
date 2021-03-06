@@ -21,6 +21,7 @@ History:
 #include "varistor.h"
 #include "ms5837.h"
 #include "TFmini.h"
+#include "E18.h"
 
 #include "rflink.h"
 #include "uart6_printf.h"

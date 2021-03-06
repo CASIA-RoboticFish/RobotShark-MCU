@@ -34,7 +34,7 @@ static void pwm_tim4_init ( uint32_t arr, uint32_t psc )
 
     
     
-		GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15 ); 
+    GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15 ); 
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;        // 使用复用功能输出模式
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;  // 100MHz高速引脚
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;      // 使用推挽输出
@@ -43,9 +43,9 @@ static void pwm_tim4_init ( uint32_t arr, uint32_t psc )
 
 		// 设置为复用功能（指定具体的复用功能）
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4);    
-		GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4);
-		GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_TIM4);
-		GPIO_PinAFConfig(GPIOD, GPIO_PinSource15, GPIO_AF_TIM4);
+GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4);
+GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_TIM4);
+GPIO_PinAFConfig(GPIOD, GPIO_PinSource15, GPIO_AF_TIM4);
 		
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
