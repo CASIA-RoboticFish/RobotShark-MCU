@@ -17,18 +17,15 @@ History:
 #include "led.h"
 
 
-#define             FIND_OBSTACLE               1
-#define             FIND_NO_OBSTACLE            0
-#define             E18_forward                 GPIO_Pin_4				//GPIOB4
-#define             E18_left                    GPIO_Pin_5				//GPIOB5
-#define             E18_right                   GPIO_Pin_0				//GPIOB0
-#define             ForwardDetect               GPIO_ReadInputDataBit(GPIOB, E18_forward)		//循环调用定义的变量就可读取当前检测障碍的结果
-#define             LeftDetect                  GPIO_ReadInputDataBit(GPIOB, E18_left)
-#define             RightDetect                 GPIO_ReadInputDataBit(GPIOB, ForwardDetect)
-
+//#define             FIND_OBSTACLE               1
+//#define             FIND_NO_OBSTACLE            0
+#define             E18_AHEAD                   1
+#define             E18_LEFT                    2
+#define             E18_RIGHT                   3
 
 
 void E18_init();
-void detect_filtering()；				// 对障碍检测二值化结果滤波 （还未完成）
+u8 E18_detect(u8 channel);
+void detect_filtering();				// 对障碍检测二值化结果滤波 （还未完成）
 
 #endif

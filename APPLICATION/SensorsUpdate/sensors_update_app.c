@@ -8,7 +8,7 @@ Date: 2019.07.03
 History: 
 *****************************************************************************/
 #include "sensors_update_app.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR SensorsUpdateTmr;
 static OS_TCB SensorsUpdateTCB;
@@ -51,10 +51,7 @@ static void sensors_update_app_task(void * p_arg)
 //	float ang1_pre , ang2_pre, ang3_pre;
 //	float angw1, angw2, angw3;
 	unsigned char chrTemp[30];
-	uint8_t TFmini_foreward[TFMINI_DATA_Len];
-	uint8_t Send_Data[] = {0x5a, 0x04, 0x02, 0x60};
-    uint16_t foreward_dist = 0;
-    
+//	u 
 		
 	// 深度计数据（刚启动时的）
 	float depth_ori;
@@ -71,47 +68,52 @@ static void sensors_update_app_task(void * p_arg)
 		
 		// 时间戳
 		now_os_tick = OSTimeGet(&err);
-		boxfishstate.timestamp = (float)now_os_tick/(float)(OS_CFG_TICK_RATE_HZ);
+		robosharkstate.timestamp = (float)now_os_tick/(float)(OS_CFG_TICK_RATE_HZ);
 		
 		// IMU(1)数据，外接IMU
-//		JY901_read_bytes(0x50, JY901_AX, 24, &chrTemp[0]);
-//		accel[0] = (float)char_to_short(&chrTemp[0])/32768*16;
-//		accel[1] = (float)char_to_short(&chrTemp[2])/32768*16;
-//		accel[2] = (float)char_to_short(&chrTemp[4])/32768*16;
-//		gyro[0] = (float)char_to_short(&chrTemp[6])/32768*2000;
-//		gyro[1] = (float)char_to_short(&chrTemp[8])/32768*2000;
-//		gyro[2] = (float)char_to_short(&chrTemp[10])/32768*2000;
-////		h[0] = CharToShort(&chrTemp[12]);
-////		h[1] = CharToShort(&chrTemp[14]);
-////		h[2] = CharToShort(&chrTemp[16]);
-//		roll = (float)char_to_short(&chrTemp[18])/32768*180;
-//		pitch = (float)char_to_short(&chrTemp[20])/32768*180;
-//		yaw = (float)char_to_short(&chrTemp[22])/32768*180;
-//		
-//		boxfishstate.imu_data.gyrox  = gyro[0]; // 单位是：
-//		boxfishstate.imu_data.gyroy  = gyro[1];
-//		boxfishstate.imu_data.gyroz  = gyro[2];
-//		boxfishstate.imu_data.accelx = accel[0]; // 单位是：g
-//		boxfishstate.imu_data.accely = accel[1];
-//		boxfishstate.imu_data.accelz = accel[2];
-//		boxfishstate.imu_data.pitch  = pitch;
-//		boxfishstate.imu_data.roll   = roll;
-//		boxfishstate.imu_data.yaw    = yaw;
+		JY901_read_bytes(0x50, JY901_AX, 24, &chrTemp[0]);
+		accel[0] = (float)char_to_short(&chrTemp[0])/32768*16;
+		accel[1] = (float)char_to_short(&chrTemp[2])/32768*16;
+		accel[2] = (float)char_to_short(&chrTemp[4])/32768*16;
+		gyro[0] = (float)char_to_short(&chrTemp[6])/32768*2000;
+		gyro[1] = (float)char_to_short(&chrTemp[8])/32768*2000;
+		gyro[2] = (float)char_to_short(&chrTemp[10])/32768*2000;
+//		h[0] = CharToShort(&chrTemp[12]);
+//		h[1] = CharToShort(&chrTemp[14]);
+//		h[2] = CharToShort(&chrTemp[16]);
+		roll = (float)char_to_short(&chrTemp[18])/32768*180;
+		pitch = (float)char_to_short(&chrTemp[20])/32768*180;
+		yaw = (float)char_to_short(&chrTemp[22])/32768*180;
+		
+		robosharkstate.imu_data.gyrox  = gyro[0]; // 单位是：
+		robosharkstate.imu_data.gyroy  = gyro[1];
+		robosharkstate.imu_data.gyroz  = gyro[2];
+		robosharkstate.imu_data.accelx = accel[0]; // 单位是：g
+		robosharkstate.imu_data.accely = accel[1];
+		robosharkstate.imu_data.accelz = accel[2];
+		robosharkstate.imu_data.pitch  = pitch;
+		robosharkstate.imu_data.roll   = roll;
+		robosharkstate.imu_data.yaw    = yaw;
 			
-		//TFmini距离数据
+		// 深度数据
+		if(depth_cnt < 10)
+		{
+			depth_cnt++;
+		}
+		else
+		{
+			robosharkstate.depth = get_ms5837_data()-depth_ori;
+			depth_cnt = 0;
+		}
 
 		
-		// 深度数据
-//		if(depth_cnt < 10)
-//		{
-//			depth_cnt++;
-//		}
-//		else
-//		{
-//			boxfishstate.depth = get_ms5837_data()-depth_ori;
-//			depth_cnt = 0;
-//		}
-
+//		//TFmini距离数据
+		robosharkstate.infrared_data.obstacle_down_distance = TFmini_get_distance();
+		
+		// E18 数据
+		robosharkstate.infrared_data.obstacle_ahead = E18_detect(E18_AHEAD);
+		robosharkstate.infrared_data.obstacle_left  = E18_detect(E18_LEFT);
+		robosharkstate.infrared_data.obstacle_right = E18_detect(E18_RIGHT);
 		
 		//BuffPrintf("Sensors Update\n");
 		

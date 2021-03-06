@@ -8,7 +8,7 @@ Date: 2020.09.28
 History: 
 *****************************************************************************/
 #include "target_tracking_app.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR TargetTrackingTmr;
 static OS_TCB TargetTrackingTCB;

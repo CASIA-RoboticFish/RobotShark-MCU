@@ -1,6 +1,6 @@
 /*****************************************************************************
 Copyright: CASIA 仿生机器鱼实验室
-File name: boxfishstate.h
+File name: robosharkstate.h
 Description: 本文件定义了描述boxfish机器人控制器的参数，机器人需要的控制器参数都可以在这个文件下面定义
 	     例如，深度控制器：
 	     typedef struct DepthControlParam // 这个可以由你自己定义

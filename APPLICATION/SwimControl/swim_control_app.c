@@ -9,7 +9,7 @@ History:
 *****************************************************************************/
 #include "swim_control_app.h"
 
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR SwimControlTmr;
 static OS_TCB SwimControlTCB;
@@ -36,26 +36,26 @@ float compute_tail_cpg_model(float freq, float amp, float offset, float dt)
 // 设置尾巴摆动幅度
 void set_tail_amp(float amp)
 {
-	boxfishstate.swim_param.motion_amp = amp;
+	robosharkstate.swim_param.motion_amp = amp;
 }
 
 // 设置尾巴摆动频率
 void set_tail_freq(float freq)
 {
-	boxfishstate.swim_param.motion_freq = freq;
+	robosharkstate.swim_param.motion_freq = freq;
 }
 
 // 设置尾巴摆动偏移
 void set_tail_offset(float offset)
 {
-	boxfishstate.swim_param.motion_offset = offset;
+	robosharkstate.swim_param.motion_offset = offset;
 }
 
 
 // 设置胸鳍角度
 void set_pect_fin_angle(float angle, uint8_t channel)
 {
-	boxfishstate.swim_param.pecfin_angle[channel] = angle;
+	robosharkstate.swim_param.pecfin_angle[channel] = angle;
 	pectoral_servo_set_angle(angle, channel);
 }
 
@@ -66,18 +66,18 @@ void swim_control_start(void)
 	CPU_SR_ALLOC();
 	OS_ERR err;
 
-	if(boxfishstate.swim_state == SWIM_RUN)
+	if(robosharkstate.swim_state == SWIM_RUN)
 	{
 		return;
 	}
-	else if(boxfishstate.swim_state == SWIM_STOP)
+	else if(robosharkstate.swim_state == SWIM_STOP)
 	{
 		set_tail_amp(s_f32_stop_amp);
 		set_tail_freq(s_f32_stop_freq);
 		s_f32_cpg_k1 = 50;
 	  s_f32_cpg_k2 = 50;
 	}
-	else if(boxfishstate.swim_state == SWIM_FORCESTOP)
+	else if(robosharkstate.swim_state == SWIM_FORCESTOP)
 	{
 		set_tail_amp(s_f32_stop_amp);
 		set_tail_freq(s_f32_stop_freq);
@@ -93,12 +93,12 @@ void swim_control_start(void)
 							 &err);
 		OS_CRITICAL_EXIT();
 	}
-	else if(boxfishstate.swim_state == SWIM_INIT)
+	else if(robosharkstate.swim_state == SWIM_INIT)
 	{
 		// Do nothing!
 	}
 
-	boxfishstate.swim_state = SWIM_RUN;
+	robosharkstate.swim_state = SWIM_RUN;
 }
 
 void swim_control_tail_start(void)
@@ -106,18 +106,18 @@ void swim_control_tail_start(void)
 	CPU_SR_ALLOC();
 	OS_ERR err;
 
-	if(boxfishstate.swim_state == TAIL_RUN)
+	if(robosharkstate.swim_state == TAIL_RUN)
 	{
 		return;
 	}
-	else if(boxfishstate.swim_state == TAIL_STOP)
+	else if(robosharkstate.swim_state == TAIL_STOP)
 	{
 		set_tail_amp(s_f32_stop_amp);
 		set_tail_freq(s_f32_stop_freq);
 		s_f32_cpg_k1 = 50;
 	  s_f32_cpg_k2 = 50;
 	}
-	else if(boxfishstate.swim_state == SWIM_FORCESTOP)
+	else if(robosharkstate.swim_state == SWIM_FORCESTOP)
 	{
 		set_tail_amp(s_f32_stop_amp);
 		set_tail_freq(s_f32_stop_freq);
@@ -133,12 +133,12 @@ void swim_control_tail_start(void)
 							 &err);
 		OS_CRITICAL_EXIT();
 	}
-	else if(boxfishstate.swim_state == SWIM_INIT)
+	else if(robosharkstate.swim_state == SWIM_INIT)
 	{
 		// Do nothing!
 	}
 
-	boxfishstate.swim_state = SWIM_RUN;
+	robosharkstate.swim_state = SWIM_RUN;
 }
 //void swim_control_leftpectfin_start(void);
 //void swim_control_rightpectfin_start(void);
@@ -147,17 +147,17 @@ void swim_control_tail_start(void)
 
 void swim_control_stop(void)
 {
-	if(boxfishstate.swim_state != SWIM_RUN)
+	if(robosharkstate.swim_state != SWIM_RUN)
 	{
 			return;
 	}
-	s_f32_stop_amp = boxfishstate.swim_param.motion_amp;
+	s_f32_stop_amp = robosharkstate.swim_param.motion_amp;
 	set_tail_amp(0.0f);
-	s_f32_stop_freq = boxfishstate.swim_param.motion_freq;
+	s_f32_stop_freq = robosharkstate.swim_param.motion_freq;
 	set_tail_freq(0.0f);
 	s_f32_cpg_k1 = 0;
 	s_f32_cpg_k2 = 0;
-	boxfishstate.swim_state = SWIM_STOP;
+	robosharkstate.swim_state = SWIM_STOP;
 }
 
 
@@ -169,7 +169,7 @@ void swim_control_forcestop(void)
 
 	int i = 0;
 
-	if(boxfishstate.swim_state == SWIM_FORCESTOP)
+	if(robosharkstate.swim_state == SWIM_FORCESTOP)
 	{
 			return;
 	}
@@ -186,15 +186,15 @@ void swim_control_forcestop(void)
 
 	OS_CRITICAL_EXIT();
 	
-	s_f32_stop_amp = boxfishstate.swim_param.motion_amp;
+	s_f32_stop_amp = robosharkstate.swim_param.motion_amp;
 	set_tail_amp(0.0f);
-	s_f32_stop_freq = boxfishstate.swim_param.motion_freq;
+	s_f32_stop_freq = robosharkstate.swim_param.motion_freq;
 	set_tail_freq(0.0f);
 	s_f32_cpg_k1 = 0;
 	s_f32_cpg_k2 = 0;
 	
 	tail_servo_set_angle(0, 0);
-	boxfishstate.swim_state = SWIM_FORCESTOP;
+	robosharkstate.swim_state = SWIM_FORCESTOP;
 }
 
 
@@ -221,14 +221,14 @@ static void swim_control_app_task(void * p_arg)
 	OS_TICK last_os_tick;
 	float time_interval;
 	float tail_angle = 0.0f;
-	float amp = boxfishstate.swim_param.motion_amp;
-	float freq = boxfishstate.swim_param.motion_freq;
-	float offset = boxfishstate.swim_param.motion_offset;
+	float amp = robosharkstate.swim_param.motion_amp;
+	float freq = robosharkstate.swim_param.motion_freq;
+	float offset = robosharkstate.swim_param.motion_offset;
 
 	
-	set_tail_amp(boxfishstate.swim_param.motion_amp);
-	set_tail_freq(boxfishstate.swim_param.motion_freq);
-	set_tail_offset(boxfishstate.swim_param.motion_offset);
+	set_tail_amp(robosharkstate.swim_param.motion_amp);
+	set_tail_freq(robosharkstate.swim_param.motion_freq);
+	set_tail_offset(robosharkstate.swim_param.motion_offset);
 
 	
 	now_os_tick = OSTimeGet(&err);
@@ -245,17 +245,17 @@ static void swim_control_app_task(void * p_arg)
 			time_interval = (float)(now_os_tick - last_os_tick) / (float)(OS_CFG_TICK_RATE_HZ);
 			last_os_tick = now_os_tick;
 
-			s_f32_motion_time += time_interval*boxfishstate.swim_param.motion_freq;	
-			boxfishstate.swim_param.motion_time = s_f32_motion_time;
-			amp = boxfishstate.swim_param.motion_amp/180*3.1415926; // 单位是弧度
-			freq = boxfishstate.swim_param.motion_freq*2*3.1415926; // 单位是角频率，2pi代表1Hz 
-			offset = boxfishstate.swim_param.motion_offset/180*3.1415926; // 单位是弧度
+			s_f32_motion_time += time_interval*robosharkstate.swim_param.motion_freq;	
+			robosharkstate.swim_param.motion_time = s_f32_motion_time;
+			amp = robosharkstate.swim_param.motion_amp/180*3.1415926; // 单位是弧度
+			freq = robosharkstate.swim_param.motion_freq*2*3.1415926; // 单位是角频率，2pi代表1Hz 
+			offset = robosharkstate.swim_param.motion_offset/180*3.1415926; // 单位是弧度
 			//tail_angle = amp * sin(freq*s_f32_motion_time) + offset; // 简单的正弦运动的控制律，可以进行修改
 			tail_angle = compute_tail_cpg_model(freq, amp, offset, time_interval);
 			tail_servo_set_angle(tail_angle, 0);
 		
 			// 机器人状态，记录尾鳍摆动的角度
-			boxfishstate.swim_param.tail_angle = tail_angle;
+			robosharkstate.swim_param.tail_angle = tail_angle;
 
 	}
 }

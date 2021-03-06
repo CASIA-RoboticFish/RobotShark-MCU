@@ -8,7 +8,7 @@ Date: 2019.07.03
 History: 
 *****************************************************************************/
 #include "data_sendback_app.h"
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TCB DataSendbackTCB;
 __align(8) CPU_STK DATA_SENDBACK_APP_TASK_STK[DATA_SENDBACK_APP_STK_SIZE];

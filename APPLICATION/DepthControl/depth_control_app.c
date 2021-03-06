@@ -9,7 +9,7 @@ History:
 *****************************************************************************/
 #include "depth_control_app.h"
 
-extern BOXFISH boxfishstate;
+extern ROBOSHARK robosharkstate;
 
 static OS_TMR DepthControlTmr; // 定义一个定时器
 static OS_TCB DepthControlTCB; // 定义一个任务控制块
