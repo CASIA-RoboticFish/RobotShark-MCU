@@ -314,7 +314,19 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 				BuffPrintf("READ_DEPTH\n");
 			#endif
 			break;
-				
+		
+		case READ_INFRARED_SWITCH:
+			data = atof(message);
+			set_data_type(command,data);
+			data_show_app_resume();
+			break;
+		
+		case READ_INFRARED_DISTANCE:
+			data = atof(message);
+			set_data_type(command,data);
+			data_show_app_resume();
+			break;
+		
 		case READ_FILE_LIST:
 		  mf_scan_files("0:");
 			//RFLink_message("%s",  "read file");

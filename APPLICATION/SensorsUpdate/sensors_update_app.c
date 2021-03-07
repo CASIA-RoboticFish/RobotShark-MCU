@@ -40,7 +40,7 @@ static void sensors_update_app_task(void * p_arg)
 	uint8_t var_cnt = 0;
 	uint8_t rwdata_cnt = 0;
 	uint8_t depth_cnt = 0;
-
+	uint8_t infrared_cnt;
 	unsigned long sensor_timestamp;
 	
 	// IMU数据
@@ -54,10 +54,13 @@ static void sensors_update_app_task(void * p_arg)
 //	u 
 		
 	// 深度计数据（刚启动时的）
+	
 	float depth_ori;
 	depth_ori = get_ms5837_data();
     
-	//
+	// 红外传感器
+	
+	
 	uint8_t databuf[16];
 	while(1)
 	{
@@ -106,15 +109,21 @@ static void sensors_update_app_task(void * p_arg)
 			depth_cnt = 0;
 		}
 
-		
-//		//TFmini距离数据
-		robosharkstate.infrared_data.obstacle_down_distance = TFmini_get_distance();
-		
-		// E18 数据
-		robosharkstate.infrared_data.obstacle_ahead = E18_detect(E18_AHEAD);
-		robosharkstate.infrared_data.obstacle_left  = E18_detect(E18_LEFT);
-		robosharkstate.infrared_data.obstacle_right = E18_detect(E18_RIGHT);
-		
+		if(infrared_cnt < 10)
+		{
+			infrared_cnt++;
+		}
+		else
+		{
+			//TFmini距离数据
+			robosharkstate.infrared_data.obstacle_down_distance = TFmini_get_distance();
+			// E18 数据
+			robosharkstate.infrared_data.obstacle_ahead = E18_detect(E18_AHEAD);
+			robosharkstate.infrared_data.obstacle_left  = E18_detect(E18_LEFT);
+			robosharkstate.infrared_data.obstacle_right = E18_detect(E18_RIGHT);
+			
+			infrared_cnt = 0;
+		}
 		//BuffPrintf("Sensors Update\n");
 		
 	}

@@ -68,7 +68,7 @@ typedef struct InfraredData
 	uint8_t obstacle_ahead;
 	uint8_t obstacle_left;
 	uint8_t obstacle_right;
-	uint8_t obstacle_down_distance;
+	uint16_t obstacle_down_distance;
 }InfraredData;
 
 // 用于描述robosharkstate机器人状态的结构体
