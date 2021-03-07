@@ -11,7 +11,7 @@ History:
 #include "main.h"
 
 extern uint16_t cordist;
-
+extern StateTransform* stateTrans;
 
 // 初始化机器人结构体
 ROBOSHARK robosharkstate = 
@@ -44,28 +44,22 @@ void test_task(void *p_arg)
 	OS_TICK tick;
     CPU_TS ts;
     OS_MSG_SIZE size;
-    uint8_t rx_data;
-	uint16_t ret = 0;
-	float depth = 0.0f;
-//    uint8_t TFmini_forward[TFMINI_DATA_Len];
-//    uint16_t TFmini_results[2];
-
-//    uint8_t if_data_creticable = 0;
-    //uint8_t send_length = (uint8_t) (sizeof(c_get_dist) /sizeof(c_get_dist[0]));
-//                                                                                 	while(1)
-//	{
-////        TFmini_read_bytes(TFMINI, TFMINI_DATA_Len, send_length, &c_get_dist[0], &TFmini_forward[0]);
-////		if_data_creticable = TFmini_data_analyse(&TFmini_forward[0], &TFmini_results[0]);
-//		if (ForwardDetect == 0x00)
-//        {
-//            led_on();
-//        }
-//		else
-//        {
-//            led_off();
-//        }
-//	}
+    StateMachine stateMachine;
+    stateMachine.state = stop;
+    stateMachine.transNum = (int) sizeof(stateTrans) / sizeof(stateTrans[0]);
+    EventID inputevt[] = {
+        NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL,
+        FNNN, FNNN, NNNR, NNNR, FNNR, NORMAL, NORMAL, NORMAL
+    };
+    while(1)
+    {
+        for(int i=0; i < sizeof(inputevt); i++)
+        {
+            runStateMachine(&stateMachine, inputevt[i]);
+        }
+    } 
 }
+
 
 /********************************************************************************
 *
@@ -139,7 +133,7 @@ void start_task(void *p_arg)
 	/*****************************************************************************/	
 	//挂起任务（测试任务）	，挂起就是不执行
 	/*****************************************************************************/		
-	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err); 
+	//OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err); 
 	OS_TaskSuspend((OS_TCB*)&TestTaskTCB,&err); 
 	/*****************************************************************************/
 	/*****************************************************************************/	
