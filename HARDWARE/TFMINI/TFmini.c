@@ -9,8 +9,8 @@
 
 u8 tf_command_sys_reset[4] = {0x5A, 0x04, 0x02, 0x60};
 u8 tf_command_get_dist[5] = {0x5A, 0x05, 0x00, 0x01, 0x60};
-u8 tf_command_uart2iic[5] = {0x5A, 0x05, 0x0A, 0x00, 0x69};
-u8 tf_command_iic2uart[5] = {0x5A, 0x05, 0x0A, 0x01, 0x6A};
+u8 tf_command_uart2iic[5] = {0x5A, 0x05, 0x0A, 0x01, 0x69};
+u8 tf_command_IIC4uart[5] = {0x5A, 0x05, 0x0A, 0x01, 0x6A};
 u8 tf_command_save_cfg[4] = {0x5A, 0x04, 0x11, 0x6F};
 
 void TFmini_init()
@@ -122,22 +122,18 @@ uint8_t TFmini_data_analyse(uint8_t *data, uint16_t *results)
 }
 
 
-uint8_t TFmini_get_distance()
+uint16_t TFmini_get_distance()
 {
-//	int8_t TFmini_foreward[TFMINI_DATA_Len];
-////	uint8_t Send_Data[] = {0x5a, 0x04, 0x02, 0x60};
-////	uint16_t foreward_dist = 0;
-////    
-//// uint8_t TFmini_forward[TFMINI_DATA_Len];
-////    uint16_t TFmini_results[2];
+	// TFmini传感器一定要先用串口助手调成IIC通讯模式
+	uint8_t tfmini_retdata[TFMINI_DATA_LEN];
+	uint16_t tfmini_results[2];
+	uint8_t is_data_creticable = 0;
+	uint8_t send_length = (uint8_t) (sizeof(tf_command_get_dist) /sizeof(tf_command_get_dist[0]));
 
-////    uint8_t if_data_creticable = 0;
-////    uint8_t send_length = (uint8_t) (sizeof(c_get_dist) /sizeof(c_get_dist[0]));
-////                                                                                 	while(1)
-////	{
-////       
-//	TFmini_read_bytes(TFMINI, TFMINI_DATA_Len, send_length, &c_get_dist[0], &TFmini_forward[0]);
-//	if_data_creticable = TFmini_data_analyse(&TFmini_forward[0], &TFmini_results[0]);
-	
-	return  0;
+	TFmini_read_bytes(TFMINI_ADDRESS, TFMINI_DATA_LEN, send_length, &tf_command_get_dist[0], tfmini_retdata);
+	is_data_creticable = TFmini_data_analyse(tfmini_retdata, tfmini_results);
+	if(is_data_creticable)
+		return tfmini_results[0];
+	else
+		return 0xFFFF;
 }

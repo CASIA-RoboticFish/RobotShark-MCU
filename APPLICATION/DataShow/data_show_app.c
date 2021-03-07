@@ -99,11 +99,32 @@ static void data_show_app_task(void * p_arg)
 				memcpy(databuf, &(robosharkstate.depth), 4);
 				break;
 			
+			case READ_INFRARED_SWITCH:
+				switch(s_dataaxis)
+				{
+					case 1:
+						memcpy(databuf, &(robosharkstate.infrared_data.obstacle_ahead), 1);
+						break;
+					case 2:
+						memcpy(databuf, &(robosharkstate.infrared_data.obstacle_left), 1);
+						break;
+					case 3:
+						memcpy(databuf, &(robosharkstate.infrared_data.obstacle_right), 1);
+						break;
+				}
+				break;
+				
+			case READ_INFRARED_DISTANCE:
+				memcpy(databuf, &(robosharkstate.infrared_data.obstacle_down_distance), 2);
+				break;
+			
 			default:
 				break;
 		}
 		
-		if ( s_datatype > READ_IMU2_GYRO && s_datatype < READ_DEPTH) 
+		if ( s_datatype == READ_INFRARED_SWITCH) 
+			RFLink_sendStruct(FRIEND_ID1, s_datatype, databuf, 1);
+		else if ( s_datatype == READ_INFRARED_DISTANCE)
 			RFLink_sendStruct(FRIEND_ID1, s_datatype, databuf, 2);
 		else
 			RFLink_sendStruct(FRIEND_ID1, s_datatype, databuf, 4);
