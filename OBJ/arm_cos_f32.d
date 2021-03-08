@@ -1,9 +1,0 @@
-..\obj\arm_cos_f32.o: ..\CORE\CMSIS\DSP_Lib\Source\FastMathFunctions\arm_cos_f32.c
-..\obj\arm_cos_f32.o: ..\CORE\CMSIS\DSP_Lib\Includes\arm_math.h
-..\obj\arm_cos_f32.o: ..\CORE\core_cm4.h
-..\obj\arm_cos_f32.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
-..\obj\arm_cos_f32.o: ..\CORE\core_cmInstr.h
-..\obj\arm_cos_f32.o: ..\CORE\core_cmFunc.h
-..\obj\arm_cos_f32.o: ..\CORE\core_cm4_simd.h
-..\obj\arm_cos_f32.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\string.h
-..\obj\arm_cos_f32.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\math.h
