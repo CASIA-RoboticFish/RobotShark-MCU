@@ -10,10 +10,22 @@ History:
 #include "auto_navigation_app.h"
 
 extern ROBOSHARK robosharkstate;
+static OS_TMR AutoNavigationTmr;  //¶¨ÒåÒ»¸ö¶¨Ê±Æ÷
+static OS_TCB AutoNavigationTCB;    //¶¨ÒåÒ»¸öÈÎÎñ¿é
+__align(8) CPU_STK AUTO_NAVIGATION_APP_TASK_STK[AUTO_NAVIGATION_APP_STK_SIZE];  //¶¨ÒåÈÎÎñ¶ÑÕ»
+static int AN_tmrcount = 0;
+static int rand_period = 0;
+static EventID last_evt = NORMAL;
+EventID curEvt = NORMAL;
+MotionState *dis_state[] = {"stop", "ff", "fs", "lr", "rr", "ls", "rs", "up", "down"};
+Action *dis_action[] = {"sp",  "ff", "fs", "lr", "rr", "ls", "rs", "up", "down"};
+
+unsigned char obs_down = 0x00, obs_ahead = 0x00, obs_left = 0x00, obs_right = 0x00;
+
 StateTransform stateTrans[] = {
     //×ÔÓÉÂþ²½Çé¿ö
     {stop, NORMAL, 0., .2, forward_f, ff},
-    {stop, NORMAL, .2, .4, forward_s, fs},
+    {stop, NORMAL, .2, .4, forward_s, fss},
     {stop, NORMAL, .4, .5, yaw_lr, lr},
     {stop, NORMAL, .5, .6, yaw_rr, rr},
     {stop, NORMAL, .6, .75, yaw_ls, ls},
@@ -21,7 +33,7 @@ StateTransform stateTrans[] = {
     {stop, NORMAL, .9, .95, pitch_u, up},
     {stop, NORMAL, .95, 1., pitch_d, down},
     {forward_f, NORMAL, 0., .1, stop, sp},
-    {forward_f, NORMAL, .1, .4, forward_s, fs},
+    {forward_f, NORMAL, .1, .4, forward_s, fss},
     {forward_f, NORMAL, .4, .5, yaw_lr, lr},
     {forward_f, NORMAL, .5, .6, yaw_rr, rr},
     {forward_f, NORMAL, .6, .75, yaw_ls, ls},
@@ -41,74 +53,58 @@ StateTransform stateTrans[] = {
     {yaw_rr, NORMAL, 0., .5, stop, sp},    
     {yaw_rr, NORMAL, .5, 1., forward_f, ff},
     {yaw_ls, NORMAL, 0., .5, stop, sp},
-    {yaw_ls, NORMAL, .5, 1., forward_s, fs}, 
+    {yaw_ls, NORMAL, .5, 1., forward_s, fss}, 
     {yaw_rs, NORMAL, 0., .5, stop, sp},    
-    {yaw_rs, NORMAL, .5, 1., forward_s, fs},
+    {yaw_rs, NORMAL, .5, 1., forward_s, fss},
     {pitch_d, NORMAL, 0., 1., stop, sp},
     {pitch_u, NORMAL, 0., 1., stop, sp},
     
     // ·Ç×ÔÓÉÂþ²½Çé¿ö     
     {NULL, NNNR, 0., .15, stop, sp},
     //{NULL, NNNR, , , forward_f, ff},
-    {NULL, NNNR, .15, .3, forward_s, fs},
+    {NULL, NNNR, .15, .3, forward_s, fss},
     {NULL, NNNR, .3, .7, yaw_lr, lr},
     {NULL, NNNR, .7, 1., yaw_ls, ls},
-    
     {NULL, NNLN, 0., .15, stop, sp},
     //{NULL, NNLN, , , forward_f, ff},
-    {NULL, NNLN, .15, .3, forward_s, fs},
+    {NULL, NNLN, .15, .3, forward_s, fss},
     {NULL, NNLN, .3, .7, yaw_rr, rr},
     {NULL, NNLN, .7, 1., yaw_rs, rs},
-    
     {NULL, NNLR, 0., .5, stop, sp},
     //{NULL, NNLR, , , forward_f, ff},
-    {NULL, NNLR, .5, 1., forward_s, fs},
-    
+    {NULL, NNLR, .5, 1., forward_s, fss},
     {NULL, NDNN, 0., .1, stop, sp},
     {NULL, NDNN, .1, .15, forward_f, ff},
-    {NULL, NDNN, .15, .35, forward_s, fs},
+    {NULL, NDNN, .15, .35, forward_s, fss},
     {NULL, NDNN, .35, .45, yaw_lr, lr},
     {NULL, NDNN, .45, .55, yaw_rr, rr},
     {NULL, NDNN, .55, .65, yaw_ls, ls},
     {NULL, NDNN, .65, .75, yaw_rs, rs},
     {NULL, NDNN, .75, 1., pitch_u, up},
-    
     {NULL, NDNR, 0., .15, stop, sp},
     //{NULL, NDNR, , , forward_f, ff},
-    {NULL, NDNR, .15, .3, forward_s, fs},
+    {NULL, NDNR, .15, .3, forward_s, fss},
     {NULL, NDNR, .3, .7, yaw_lr, lr},
     {NULL, NDNR, .7, 1., yaw_ls, ls},
-    
     {NULL, NDLN, 0., .15, stop, sp},
     //{NULL, NDLN, , , forward_f, ff},
-    {NULL, NDLN, .15, .3, forward_s, fs},
+    {NULL, NDLN, .15, .3, forward_s, fss},
     {NULL, NDLN, .3, .7, yaw_rr, rr},
     {NULL, NDLN, .7, 1., yaw_rs, rs},
-    
     {NULL, NDLR, 0., .3, stop, sp},
-    {NULL, NDLR, .3, .7, forward_s, fs},
+    {NULL, NDLR, .3, .7, forward_s, fss},
     {NULL, NDLR, .7, 1., pitch_u, up},
-    
     {NULL, FNNN, 0., .5, yaw_lr, lr},
     {NULL, FNNN, .5, 1., yaw_rr, rr},
-    
     {NULL, FNNR, 0., 1., yaw_lr, lr},
-    
     {NULL, FNLN, 0., 1., yaw_rr, rr},
-    
     {NULL, FNLR, 0., 1., stop, sp},
-    
     {NULL, FDNN, 0., .5, yaw_lr, lr},
     {NULL, FDNN, .5, 1., yaw_rr, rr},
-    
     {NULL, FDNR, 0., 1., yaw_lr, lr}, 
-    
     {NULL, FDLN, 0., 1., yaw_rr, rr},
-    
     {NULL, FDLR, 0., 1., stop, sp}
 };
-
-
 
 
 void turn_lr(float freq, float offset)
@@ -128,7 +124,9 @@ Note: StateTransformÐÎÊ½  {µ±Ç°×´Ì¬£¬ ×ªÒÆ¸ÅÂÊÏÂÏÞ£¬×ªÒÆ¸ÅÂÊÉÏÏÞ£¬ÊÂ¼þid£¬ ÏÂÒ»×
 StateTransform* findTrans(StateMachine* pSM, const EventID evt)
 {
     int i;
+    srand((int)robosharkstate.timestamp);
     float rand_prob = (rand() % 100) / 100.;
+    BuffPrintf("RAND: %f\r\n", rand_prob);
 //    float rand_period = rand() % 5 + 1.;
     for (i=0; i < pSM->transNum; i++)
     {
@@ -137,20 +135,30 @@ StateTransform* findTrans(StateMachine* pSM, const EventID evt)
             if((((pSM->transform[i].nextMotionState == yaw_lr) || (pSM->transform[i].nextMotionState == yaw_ls)) && robosharkstate.swim_param.motion_offset > 0.) &&
                 (((pSM->transform[i].nextMotionState == yaw_rr) || (pSM->transform[i].nextMotionState == yaw_rs)) && robosharkstate.swim_param.motion_offset < 0.))
             {
-                StateTransform tempTrans[] = {{pSM->state, 0., 1., evt, forward_s, fs}};     //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
+                StateTransform tempTrans[] = {{pSM->state, evt, 1., 1., forward_s, fss}};     //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
                 return &tempTrans[0];
+            }
+            else if((evt == FNNN) && ((pSM->state == yaw_lr) || (pSM->state == yaw_ls)))
+            {
+                StateTransform tempTrans[] = {{pSM->state, evt, 0., 1., yaw_lr, lr}};     //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
+                return &tempTrans[0]; 
+            }
+            else if((evt == FNNN) && ((pSM->state == yaw_rr) || (pSM->state == yaw_rs)))
+            {
+                StateTransform tempTrans[] = {{pSM->state, evt, 0., 1., yaw_rr, rr}};     //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
+                return &tempTrans[0]; 
             }
             else if((rand_prob >= pSM->transform[i].transProb_d) && (rand_prob < pSM->transform[i].transProb_u))
             {
                 return &pSM->transform[i];
             }
         }
-        else if ((pSM->transform[i].eventId == evt) && evt == NORMAL)
+        else if ((pSM->transform[i].eventId == evt) && (pSM->state == pSM->transform[i].curMotionState) && evt == NORMAL)
         {
             if((((pSM->transform[i].nextMotionState == yaw_lr) || (pSM->transform[i].nextMotionState == yaw_ls)) && robosharkstate.swim_param.motion_offset > 0.) &&
                 (((pSM->transform[i].nextMotionState == yaw_rr) || (pSM->transform[i].nextMotionState == yaw_rs)) && robosharkstate.swim_param.motion_offset < 0.))
             {
-                StateTransform tempTrans[] = {{pSM->state, 0., 1., evt, forward_s, fs}};   //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
+                StateTransform tempTrans[] = {{pSM->state, evt, 1., 1., forward_s, fss}};   //µ±Ç°×´Ì¬²»ÊÇNULL ±íÊ¾ÊÇ¹ý¶ÉÇé¿ö
                 return &tempTrans[0];
             }
             else if((rand_prob >= pSM->transform[i].transProb_d) && (rand_prob < pSM->transform[i].transProb_u))
@@ -164,25 +172,127 @@ StateTransform* findTrans(StateMachine* pSM, const EventID evt)
 
 void runStateMachine(StateMachine* pSM, const EventID evt)
 {
-    StateTransform* pTrans;
-    pTrans = findTrans(pSM, evt);
-    
-    if (pTrans == NULL)
+    if (AN_tmrcount < (int)(rand_period / 0.01) && (evt == last_evt))
     {
-        BuffPrintf("Current state %s has a blank schedule, please check the trans table.", pSM->state);
-        return;
+        AN_tmrcount++;
     }
-    
-    pSM->state = pTrans->nextMotionState;
-    Action act = pTrans->action;
-    if (act == NULL) 
+    else
     {
-        BuffPrintf("Current state %s corresonds to no action, please check the trans table.", pSM->state);
-        return;
+        srand((int)robosharkstate.timestamp);
+        StateTransform* pTrans; 
+        MotionState LastState = pSM->state;
+        pTrans = findTrans(pSM, evt);
+        if(pTrans->transProb_d == 1.)
+        {
+            rand_period = 1; 
+        }
+        else
+        {
+            rand_period = rand() % 5 + 1; 
+        }
+        if (pTrans == NULL)
+        {
+            BuffPrintf("Current state %s NO SCHEDULE\r\n", dis_state[pSM->state-1]);
+            return;
+        }
+        pSM->state = pTrans->nextMotionState;
+        Action act = pTrans->action;
+        if (act == NULL) 
+        {
+            BuffPrintf("State: %s --> %s, NO ACTION!\r\n", dis_state[LastState-1], dis_state[pSM->state-1]);
+            return;
+        }
+        
+        BuffPrintf("Period: %d s  CurEvt: %d, State: %s --> %s, Action: %s\r\n", rand_period, evt, 
+                    dis_state[LastState-1], dis_state[pSM->state-1], dis_action[pTrans->action-1]);
+        AN_tmrcount = 0;
+        last_evt = evt;
     }
-    BuffPrintf("Current state is %s, the Event is %s, the Action is %s", pSM->state, evt, pTrans->action);
 }
 
+void auto_navigation_app_task()
+{
+    OS_ERR err;
+    CPU_TS ts;
+
+    StateMachine stateMachine;
+    stateMachine.state = stop;
+    stateMachine.transNum = (int) sizeof(stateTrans) / sizeof(stateTrans[0]);
+    stateMachine.transform = stateTrans;
+    while(1)
+    {
+        OSTaskSemPend(0,
+									OS_OPT_PEND_BLOCKING,
+									&ts,
+									&err);
+        //OSTaskSemPend(0, OS_OPT_PEND_BLOCKING, &ts, &err);
+        if (robosharkstate.infrared_data.obstacle_down_distance <= 50){
+            obs_down = 0x01 << 2;
+        }
+        else{
+            obs_down = 0x00;
+        }
+        obs_ahead = (1 - robosharkstate.infrared_data.obstacle_ahead) << 3;
+        obs_left = (1 - robosharkstate.infrared_data.obstacle_left) << 1;
+        obs_right = 1 - robosharkstate.infrared_data.obstacle_right;
+        curEvt = (obs_ahead | obs_down | obs_left | obs_right) + 1;
+        
+        if (robosharkstate.autoctl_state == AutoCTL_RUN)
+        {
+            runStateMachine(&stateMachine, curEvt);
+        }
+        else
+        {
+            continue;
+        }
+    }
+}
+
+void auto_navigation_app_tmrcallback()
+{
+    OS_ERR err;
+    
+    OSTaskSemPost(&AutoNavigationTCB, OS_OPT_POST_NONE, &err);
+}
+
+
+// ³õÊ¼»¯¦ÌCOSÈÎÎñ auto_navigation
+void auto_navigation_app_init(void)
+{
+	CPU_SR_ALLOC();
+
+	OS_ERR err;
+
+	OS_CRITICAL_ENTER();
+
+	OSTaskCreate(&AutoNavigationTCB,
+							 "Auto Navigation Task",
+							 auto_navigation_app_task,
+							 0,
+							 AUTO_NAVIGATION_APP_TASK_PRIO, 
+							 &AUTO_NAVIGATION_APP_TASK_STK[0],
+							 AUTO_NAVIGATION_APP_STK_SIZE/10,
+							 AUTO_NAVIGATION_APP_STK_SIZE,
+							 0,
+							 0,
+							 0,
+							 OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+							 &err);
+
+	OSTmrCreate(&AutoNavigationTmr,
+							"Auto Navigation Timer",
+							0,
+							AUTO_NAVIGATION_APP_TIMER_PERIOD_TICKS,
+							OS_OPT_TMR_PERIODIC,
+							(OS_TMR_CALLBACK_PTR)auto_navigation_app_tmrcallback,
+							0,
+							&err);
+	
+	OSTmrStart(&AutoNavigationTmr,
+						&err);
+							 
+	OS_CRITICAL_EXIT();
+}
 
 
 

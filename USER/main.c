@@ -44,20 +44,20 @@ void test_task(void *p_arg)
 	OS_TICK tick;
     CPU_TS ts;
     OS_MSG_SIZE size;
-    StateMachine stateMachine;
-    stateMachine.state = stop;
-    stateMachine.transNum = (int) sizeof(stateTrans) / sizeof(stateTrans[0]);
-    EventID inputevt[] = {
-        NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL,
-        FNNN, FNNN, NNNR, NNNR, FNNR, NORMAL, NORMAL, NORMAL
-    };
-    while(1)
-    {
-        for(int i=0; i < sizeof(inputevt); i++)
-        {
-            runStateMachine(&stateMachine, inputevt[i]);
-        }
-    } 
+//    StateMachine stateMachine;
+//    stateMachine.state = stop;
+//    stateMachine.transNum = (int) sizeof(stateTrans) / sizeof(stateTrans[0]);
+//    EventID inputevt[] = {
+//        NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL,
+//        FNNN, FNNN, NNNR, NNNR, FNNR, NORMAL, NORMAL, NORMAL
+//    };
+//    while(1)
+//    {
+//        for(int i=0; i < sizeof(inputevt); i++)
+//        {
+//            runStateMachine(&stateMachine, inputevt[i]);
+//        }
+//    } 
 }
 
 
@@ -106,6 +106,7 @@ void start_task(void *p_arg)
 	// Application任务区，这部分任务是系统正常运行时将会启动的任务
 	/*****************************************************************************/
 	// 传感器数据刷新与存储
+    auto_navigation_app_init();
 	sensors_update_app_init(); // 传感器数据更新，定时地访问传感器，将数据写入robosharkstate结构体中，优先级5
 	data_storage_app_init();   // 数据储存（SD卡），将数据写入储存卡，优先级10
 					 
@@ -133,7 +134,7 @@ void start_task(void *p_arg)
 	/*****************************************************************************/	
 	//挂起任务（测试任务）	，挂起就是不执行
 	/*****************************************************************************/		
-	//OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err); 
+	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err); 
 	OS_TaskSuspend((OS_TCB*)&TestTaskTCB,&err); 
 	/*****************************************************************************/
 	/*****************************************************************************/	

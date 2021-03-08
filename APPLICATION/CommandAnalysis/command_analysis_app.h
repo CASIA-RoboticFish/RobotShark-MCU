@@ -19,6 +19,7 @@ History:
 #include "data_storage_app.h"
 #include "data_sendback_app.h"
 #include "data_show_app.h"
+#include "auto_navigation_app.h"
 #include "pantilt_control.h"
 
 #include "robotstate.h"

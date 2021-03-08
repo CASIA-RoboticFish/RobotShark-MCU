@@ -18,71 +18,57 @@ History:
 #include "stdlib.h"
 #include "robotstate.h"
 
+#define AUTO_NAVIGATION_APP_TASK_PRIO 6  // 设置任务优先级,一般最少都有256个优先级，数字越小代表的优先级越高
+#define AUTO_NAVIGATION_APP_STK_SIZE 256 // 设置任务堆栈大小（这里的1个代表4字节）
+#define AUTO_NAVIGATION_APP_TIMER_PERIOD_MS 10 // 设置运行周期，这里说明期望这个任务每隔10ms运行一次
+#define AUTO_NAVIGATION_APP_TIMER_PERIOD_TICKS (((uint32_t)AUTO_NAVIGATION_APP_TIMER_PERIOD_MS*1000)/OS_CFG_TMR_TASK_RATE_HZ) /* 定时器时钟频率被设置为了 1000Hz */
+
 // 记录前下左右四个传感器的探测距离
 #define     DIST_CFG_F          80
 #define     DIST_CFG_D          30
 #define     DIST_CFG_LR         30
 
-// 随机游走模式参数
-#define     RS_time             5       // 正常状态下，随机游走的采样间隔上限，即控制动作改变周期最多为5秒
-#define     RS_prob_s           0.1f    // 停止游动
-#define     RS_prob_ff          0.2f    // 向前快速直游
-#define     RS_prob_fs          0.3f    // 向前缓慢直游
-#define     RS_prob_lr          0.35f   // 左急转
-#define     RS_prob_ls          0.6f    // 左缓转
-#define     RS_prob_rr          0.65f   // 右急转
-#define     RS_prob_rs          0.9f    // 右缓转
-#define     RS_prob_u           0.95f   // 下潜
-#define     RS_prob_d           1.f     // 上浮
-
 
 // 状态机模式，该模式下，机器鱼的障碍检测分成16个事件 定义了可能出现的所有事件，根据四个传感器的返回值
 typedef enum{
-    NORMAL = 0x00,       // 正常游动，周围没有检测到任何障碍
-    NNNR = 0x01,        
-    NNLN = 0x02,
-    NNLR = 0x03,
-    NDNN = 0x04,
-    NDNR = 0x05,
-    NDLN = 0x06,
-    NDLR = 0x07,
-    FNNN = 0x08,
-    FNNR = 0x09,
-    FNLN = 0x0A,
-    FNLR = 0x0B,
-    FDNN = 0x0C,
-    FDNR = 0x0D,
-    FDLN = 0x0E,
-    FDLR = 0x0F,
+    NORMAL=1,       // 正常游动，周围没有检测到任何障碍
+    NNNR,        
+    NNLN,
+    NNLR,
+    NDNN,
+    NDNR,
+    NDLN,
+    NDLR,
+    FNNN,
+    FNNR,
+    FNLN,
+    FNLR,
+    FDNN,
+    FDNR,
+    FDLN,
+    FDLR,
 } EventID;
 
 // 定义了7种运动状态：停止， 直游快、 直游慢、左急转、左缓转、右急转、右缓转、下潜、上浮
 typedef enum{
-    stop = 0x00,
+    stop=1,
     forward_f,
     forward_s,
     yaw_lr,
-    yaw_ls,
     yaw_rr,
+    yaw_ls,
     yaw_rs,
     pitch_u,
     pitch_d,
 } MotionState;
 
 typedef enum{
-//    void (*turn_lr)(float, float);
-//    void (*turn_ls)(float, float);
-//    void (*turn_rr)(float, float);
-//    void (*turn_rs)(float, float);
-//    void (*go_s)(float, float);
-//    void (*go_u)(float, uint8_t);
-//    void (*go_d)(float, uint8_t);
-    sp=0x00,
+    sp=1,
     ff,
-    fs,
+    fss,
     lr,
-    ls,
     rr,
+    ls,
     rs,
     up,
     down,
@@ -104,6 +90,15 @@ typedef struct{
     StateTransform* transform;
 } StateMachine;
 
+
+extern EventID curEvt;
+
 void runStateMachine(StateMachine* pSM, const EventID evt);
+// 任务初始化函数
+void auto_navigation_app_init(void);
+// 任务暂停函数
+void auto_navigation_app_stop(void);
+// 任务恢复运行函数
+void auto_navigation_app_resume(void);
 
 #endif
