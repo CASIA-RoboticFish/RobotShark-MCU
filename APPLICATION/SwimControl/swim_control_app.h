@@ -15,7 +15,7 @@ History:
 #include "includes.h"
 #include "os_cfg_app.h"
 #include "BuffPrintf.h"
-//#include "cpg.h"
+#include "cpg.h"
 
 #include "tail_servo_control.h"
 #include "pectoral_servo_control.h"
