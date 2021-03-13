@@ -93,6 +93,9 @@ typedef enum Command
 	SET_DEPTHCTL_PARAM,
 	SET_AUTOCTL_RUN,
 	SET_AUTOCTL_STOP,
+    // 增加一条导航状态机的调试指令
+    SET_AN_EVENT,
+    
 	READ_ROBOT_STATUS,
 	READ_CPG_PARAM,
 	READ_SINE_MOTION_PARAM,

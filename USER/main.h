@@ -60,6 +60,7 @@ History:
 #include "target_tracking_app.h"
 #include "depth_control_app.h"
 #include "distributed_communicate_app.h"
+#include "auto_navigation_app.h"
 
 // 机器人描述头文件
 #include "robotstate.h"

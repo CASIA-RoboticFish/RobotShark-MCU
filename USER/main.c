@@ -11,7 +11,7 @@ History:
 #include "main.h"
 
 extern uint16_t cordist;
-
+extern StateTransform* stateTrans;
 
 // 初始化机器人结构体
 ROBOSHARK robosharkstate = 
@@ -44,28 +44,22 @@ void test_task(void *p_arg)
 	OS_TICK tick;
     CPU_TS ts;
     OS_MSG_SIZE size;
-    uint8_t rx_data;
-	uint16_t ret = 0;
-	float depth = 0.0f;
-//    uint8_t TFmini_forward[TFMINI_DATA_Len];
-//    uint16_t TFmini_results[2];
-
-//    uint8_t if_data_creticable = 0;
-    //uint8_t send_length = (uint8_t) (sizeof(c_get_dist) /sizeof(c_get_dist[0]));
-//                                                                                 	while(1)
-//	{
-////        TFmini_read_bytes(TFMINI, TFMINI_DATA_Len, send_length, &c_get_dist[0], &TFmini_forward[0]);
-////		if_data_creticable = TFmini_data_analyse(&TFmini_forward[0], &TFmini_results[0]);
-//		if (ForwardDetect == 0x00)
+//    StateMachine stateMachine;
+//    stateMachine.state = stop;
+//    stateMachine.transNum = (int) sizeof(stateTrans) / sizeof(stateTrans[0]);
+//    EventID inputevt[] = {
+//        NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL, NORMAL,
+//        FNNN, FNNN, NNNR, NNNR, FNNR, NORMAL, NORMAL, NORMAL
+//    };
+//    while(1)
+//    {
+//        for(int i=0; i < sizeof(inputevt); i++)
 //        {
-//            led_on();
+//            runStateMachine(&stateMachine, inputevt[i]);
 //        }
-//		else
-//        {
-//            led_off();
-//        }
-//	}
+//    } 
 }
+
 
 /********************************************************************************
 *
@@ -112,6 +106,7 @@ void start_task(void *p_arg)
 	// Application任务区，这部分任务是系统正常运行时将会启动的任务
 	/*****************************************************************************/
 	// 传感器数据刷新与存储
+    auto_navigation_app_init();
 	sensors_update_app_init(); // 传感器数据更新，定时地访问传感器，将数据写入robosharkstate结构体中，优先级5
 	data_storage_app_init();   // 数据储存（SD卡），将数据写入储存卡，优先级10
 					 

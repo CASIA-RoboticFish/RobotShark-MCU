@@ -252,6 +252,10 @@ void command_execute(Command command, unsigned char* message, uint8_t message_le
 		case SET_AUTOCTL_STOP:
 			robosharkstate.autoctl_state = AutoCTL_STOP;
 			break;
+        
+        case SET_AN_EVENT:
+            curEvt = (EventID)message[0];
+            break;
 			
 		case READ_ROBOT_STATUS:
 			uint8_t rmstatus = 0x00;

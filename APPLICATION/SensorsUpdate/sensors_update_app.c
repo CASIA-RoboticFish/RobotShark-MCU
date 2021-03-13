@@ -51,7 +51,7 @@ static void sensors_update_app_task(void * p_arg)
 //	float ang1_pre , ang2_pre, ang3_pre;
 //	float angw1, angw2, angw3;
 	unsigned char chrTemp[30];
-//	u 
+    
 		
 	// 深度计数据（刚启动时的）
 	
@@ -117,11 +117,11 @@ static void sensors_update_app_task(void * p_arg)
 		{
 			//TFmini距离数据
 			robosharkstate.infrared_data.obstacle_down_distance = TFmini_get_distance();
+
 			// E18 数据
 			robosharkstate.infrared_data.obstacle_ahead = E18_detect(E18_AHEAD);
 			robosharkstate.infrared_data.obstacle_left  = E18_detect(E18_LEFT);
 			robosharkstate.infrared_data.obstacle_right = E18_detect(E18_RIGHT);
-			
 			infrared_cnt = 0;
 		}
 		//BuffPrintf("Sensors Update\n");
